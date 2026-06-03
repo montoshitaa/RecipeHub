@@ -30,10 +30,13 @@ services:
       - "4000:4000"
     depends_on:
       - mongo
+    volumes:
+      - ./backend/src:/app/src
     environment:
       PORT: ${PORT}
       MONGO_URI: ${MONGO_URI}
       JWT_SECRET: ${JWT_SECRET}
+    command: npx nodemon src/server.js
     networks:
       - recipehub_net
 

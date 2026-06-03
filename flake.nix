@@ -14,9 +14,8 @@
       {
         devShells.default = pkgs.mkShell {
           packages = with pkgs; [
-            nodejs_20
-            nodePackages.npm
-            nodePackages.pnpm
+            nodejs
+            pnpm
             mongosh
           ];
 
@@ -24,17 +23,6 @@
             echo "✦ RecipeHub dev shell"
             echo "   Node: $(node --version)"
             echo "   npm:  $(npm --version)"
-            echo ""
-            echo "   ── install ──"
-            echo "   npm install  (in backend/ & frontend/)"
-            echo ""
-            echo "   ── run ──"
-            echo "   npm run dev  (in backend/ & frontend/)"
-            echo ""
-            echo "   ── env ──"
-            echo "   cp .env.example .env  (then edit credentials)"
-            echo "   ── mongo ──"
-            echo "   docker compose up -d mongo  (for local DB)"
           '';
         };
       });

@@ -1,0 +1,54 @@
+# =============================================================================
+# RecipeHub — Docker Compose
+# Orquestación de servicios para el backend y base de datos.
+# =============================================================================
+
+services:
+  # ---------------------------------------------------------------------------
+  # MongoDB 7 — Base de datos documental
+  # Sin puertos al host; solo accesible desde la red interna.
+  # ---------------------------------------------------------------------------
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    networks:
+      - recipehub_net
+
+  # ---------------------------------------------------------------------------
+  # API — Backend Node.js / Express
+  # Construido desde ./backend, expone el puerto 4000 al host.
+  # ---------------------------------------------------------------------------
+  api:
+    build: ./backend
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    depends_on:
+      - mongo
+    volumes:
+      - ./backend/src:/app/src
+    environment:
+      PORT: ${PORT}
+      MONGO_URI: ${MONGO_URI}
+      JWT_SECRET: ${JWT_SECRET}
+    command: npx nodemon src/server.js
+    networks:
+      - recipehub_net
+
+# ---------------------------------------------------------------------------
+# Red interna para comunicación entre servicios
+# ---------------------------------------------------------------------------
+networks:
+  recipehub_net:
+    driver: bridge
+
+# ---------------------------------------------------------------------------
+# Volúmenes persistentes
+# ---------------------------------------------------------------------------
+volumes:
+  mongo_data:

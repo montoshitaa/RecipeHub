@@ -1,21 +1,21 @@
 const mongoose = require('mongoose');
 
 const commentSchema = new mongoose.Schema({
-  recipeId: {
+  recetaId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Recipe',
     required: true,
   },
-  userId: {
+  usuarioId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
   },
-  text: {
+  texto: {
     type: String,
     required: true,
   },
-  rating: {
+  calificacion: {
     type: Number,
     required: true,
     min: 1,
@@ -23,7 +23,6 @@ const commentSchema = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    required: true,
     default: Date.now,
   },
 });

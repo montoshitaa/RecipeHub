@@ -11,7 +11,7 @@ const commentSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
-  text: {
+  content: {
     type: String,
     required: true,
   },
@@ -23,7 +23,6 @@ const commentSchema = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    required: true,
     default: Date.now,
   },
 });

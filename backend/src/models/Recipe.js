@@ -13,7 +13,7 @@ const recipeSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  cookTime: {
+  cookTimeMin: {
     type: Number,
     required: true,
   },
@@ -28,21 +28,16 @@ const recipeSchema = new mongoose.Schema({
   },
   ingredients: [
     {
-      name: String,
-      quantity: String,
-      unit: String,
+      name: { type: String, required: true },
+      amount: { type: Number, required: true },
+      unit: { type: String, required: true },
     },
   ],
-  steps: [
-    {
-      type: String,
-    },
-  ],
-  tags: [
-    {
-      type: String,
-    },
-  ],
+  steps: {
+    type: [String],
+    required: true,
+  },
+  tags: [String],
   authorId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -53,14 +48,17 @@ const recipeSchema = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    required: true,
     default: Date.now,
   },
   updatedAt: {
     type: Date,
-    required: true,
     default: Date.now,
   },
+});
+
+recipeSchema.pre('save', function (next) {
+  this.updatedAt = Date.now();
+  next();
 });
 
 module.exports = mongoose.model('Recipe', recipeSchema);

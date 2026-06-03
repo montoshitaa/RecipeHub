@@ -6,3 +6,4 @@ result
 *.log
 dist/
 .envrc
+frontend/.vite/

@@ -9,6 +9,8 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
+    lowercase: true,
+    trim: true,
   },
   password: {
     type: String,
@@ -22,7 +24,6 @@ const userSchema = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    required: true,
     default: Date.now,
   },
 });

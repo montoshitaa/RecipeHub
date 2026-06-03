@@ -1,0 +1,8 @@
+node_modules/
+.env
+.direnv/
+result
+.DS_Store
+*.log
+dist/
+.envrc

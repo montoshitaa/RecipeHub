@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: recipehub_mongo
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - recipehub_net
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS:-admin123}
+
+  api:
+    build: ./backend
+    container_name: recipehub_api
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    depends_on:
+      - mongo
+    networks:
+      - recipehub_net
+    env_file:
+      - .env
+
+networks:
+  recipehub_net:
+    driver: bridge
+
+volumes:
+  mongo_data:

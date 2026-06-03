@@ -15,43 +15,38 @@ Collaborative recipe platform.
 - Node.js 20+
 - Git
 
-## Environment Setup
+## Getting Started
+
+### 1. Environment setup
 
 ```bash
-# 1. Clonar el repositorio
-git clone <repo-url>
-cd RecipeHub
-
-# 2. Crear archivo de variables de entorno
 cp .env.example .env
 ```
 
-Abre `.env` y ajusta los valores si es necesario (los de ejemplo funcionan para desarrollo local).
+Open `.env` and adjust values if needed (the examples work for local development).
 
-## Cómo levantar todo (desarrollo)
-
-### 1. Backend + Base de Datos (Docker Compose)
+### 2. Backend + Database (Docker Compose)
 
 ```bash
-# Construye imágenes e inicia los servicios en segundo plano
+# Build images and start services in the background
 docker compose up -d
 
-# Verifica que ambos contenedores estén corriendo
+# Check that both containers are running
 docker compose ps
 ```
 
-Esto levanta:
+This starts:
 
-| Servicio | Puerto | Acceso |
+| Service | Port | Access |
 |---|---|---|
-| **mongo** | — | Red interna solo |
+| **mongo** | — | Internal network only |
 | **api** | `4000` | `http://localhost:4000` |
 
-El backend se monta como volumen, por lo que cualquier cambio en `backend/src/` reinicia el servidor automáticamente (nodemon).
+The backend source is mounted as a volume, so any changes in `backend/src/` auto-restart the server (nodemon).
 
-### 2. Frontend (local con Vite)
+### 3. Frontend (local Vite dev server)
 
-En otra terminal:
+In a separate terminal:
 
 ```bash
 cd frontend
@@ -59,82 +54,76 @@ npm install
 npm run dev
 ```
 
-Esto inicia Vite en `http://localhost:5173`. Las peticiones a `/api/*` se redirigen automáticamente al backend en `localhost:4000` gracias al proxy configurado en `vite.config.js`.
+Vite starts at `http://localhost:5173`. Requests to `/api/*` are proxied to the backend at `localhost:4000` (configured in `vite.config.js`).
 
-### 3. Verificar que todo funciona
+### 4. Verify everything works
 
 ```bash
-# Health check de la API
+# Health check
 curl http://localhost:4000/api/health
 
-# Respuesta esperada:
+# Expected response:
 # {"status":"ok","timestamp":"..."}
 
-# Logs del backend
+# Backend logs
 docker compose logs api
 
-# Deberías ver:
+# Expected output:
 # Server running on port 4000
 # MongoDB connected: ...
 ```
 
-Abre `http://localhost:5173` en el navegador para ver la app.
+Open `http://localhost:5173` in your browser — you should see the welcome message.
 
-### Resumen visual
+### Quick reference
 
 ```
-Terminal 1 → docker compose up -d    (MongoDB + API en :4000)
-Terminal 2 → cd frontend && npm run dev  (React en :5173)
-Navegador  → http://localhost:5173
+Terminal 1 → docker compose up -d     (MongoDB + API on :4000)
+Terminal 2 → cd frontend && npm run dev  (React on :5173)
+Browser    → http://localhost:5173
 ```
 
-## Comandos útiles
+## Useful commands
 
 ```bash
-# Ver logs de todos los servicios
+# Tail all logs
 docker compose logs -f
 
-# Ver logs de un servicio específico
+# Logs for a specific service
 docker compose logs api -f
 docker compose logs mongo -f
 
-# Reconstruir la imagen del backend (tras cambiar package.json)
+# Rebuild the API image (needed after package.json changes)
 docker compose build api
 
-# Detener servicios (sin borrar datos)
+# Stop services (keeps data)
 docker compose down
 
-# Detener servicios y borrar volúmenes (pierdes datos de MongoDB)
+# Stop services and delete volumes (loses MongoDB data)
 docker compose down -v
 
-# Ejecutar tests del backend
+# Run backend tests
 docker compose exec api npm test
 ```
 
-## Modo producción (Docker Compose + Nginx)
-
-> Pendiente — requiere configurar dominios y SSL.
-
-El directorio `nginx/` contiene la configuración para servir el frontend compilado y redirigir peticiones API al backend.
-
-## Estructura del proyecto
+## Project structure
 
 ```
 recipehub/
 ├── backend/               # Express API
 │   ├── src/
-│   │   ├── config/        # Conexión a MongoDB
-│   │   ├── controllers/   # Lógica de rutas
-│   │   ├── middlewares/    # Auth, validación
-│   │   ├── models/        # Schemas de Mongoose
-│   │   ├── routes/        # Definición de rutas
-│   │   ├── app.js         # Configuración de Express
-│   │   └── server.js      # Punto de entrada
+│   │   ├── config/        # MongoDB connection
+│   │   ├── controllers/   # Route handlers
+│   │   ├── middlewares/    # Auth, validation
+│   │   ├── models/        # Mongoose schemas
+│   │   ├── routes/        # Route definitions
+│   │   ├── app.js         # Express setup
+│   │   └── server.js      # Entry point
 │   ├── Dockerfile
 │   └── package.json
 ├── frontend/              # React SPA (Vite)
 │   └── src/
-├── nginx/                 # Reverse proxy (producción)
+├── nginx/                 # Reverse proxy (production)
 ├── .github/workflows/     # CI/CD
 └── docker-compose.yml
 ```

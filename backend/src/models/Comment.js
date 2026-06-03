@@ -1,21 +1,21 @@
 const mongoose = require('mongoose');
 
-const comentarioSchema = new mongoose.Schema({
-  recetaId: {
+const commentSchema = new mongoose.Schema({
+  recipeId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Receta',
+    ref: 'Recipe',
     required: true,
   },
-  usuarioId: {
+  userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Usuario',
+    ref: 'User',
     required: true,
   },
-  texto: {
+  text: {
     type: String,
     required: true,
   },
-  calificacion: {
+  rating: {
     type: Number,
     required: true,
     min: 1,
@@ -28,4 +28,4 @@ const comentarioSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('Comentario', comentarioSchema);
+module.exports = mongoose.model('Comment', commentSchema);

@@ -1,39 +1,39 @@
 const mongoose = require('mongoose');
 
-const recetaSchema = new mongoose.Schema({
-  titulo: {
+const recipeSchema = new mongoose.Schema({
+  title: {
     type: String,
     required: true,
   },
-  descripcion: {
+  description: {
     type: String,
     required: true,
   },
-  categoria: {
+  category: {
     type: String,
     required: true,
   },
-  tiempoMin: {
+  cookTime: {
     type: Number,
     required: true,
   },
-  porciones: {
+  servings: {
     type: Number,
     required: true,
   },
-  dificultad: {
+  difficulty: {
     type: String,
     required: true,
-    enum: ['Fácil', 'Media', 'Difícil'],
+    enum: ['Easy', 'Medium', 'Hard'],
   },
-  ingredientes: [
+  ingredients: [
     {
-      nombre: String,
-      cantidad: String,
-      unidad: String,
+      name: String,
+      quantity: String,
+      unit: String,
     },
   ],
-  pasos: [
+  steps: [
     {
       type: String,
     },
@@ -43,12 +43,12 @@ const recetaSchema = new mongoose.Schema({
       type: String,
     },
   ],
-  autorId: {
+  authorId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Usuario',
+    ref: 'User',
     required: true,
   },
-  imagenUrl: {
+  imageUrl: {
     type: String,
   },
   createdAt: {
@@ -63,4 +63,4 @@ const recetaSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('Receta', recetaSchema);
+module.exports = mongoose.model('Recipe', recipeSchema);

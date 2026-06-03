@@ -2,8 +2,8 @@ const express = require('express');
 const cors = require('cors');
 
 const authRoutes = require('./routes/auth.routes');
-const recetasRoutes = require('./routes/recetas.routes');
-const comentariosRoutes = require('./routes/comentarios.routes');
+const recipeRoutes = require('./routes/recipe.routes');
+const commentRoutes = require('./routes/comment.routes');
 
 const app = express();
 
@@ -15,7 +15,7 @@ app.get('/api/health', (req, res) => {
 });
 
 app.use('/api/auth', authRoutes);
-app.use('/api/recetas', recetasRoutes);
-app.use('/api/recetas', comentariosRoutes);
+app.use('/api/recipes', recipeRoutes);
+app.use('/api/recipes', commentRoutes);
 
 module.exports = app;

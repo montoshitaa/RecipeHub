@@ -1,13 +1,4 @@
-# =============================================================================
-# RecipeHub — Docker Compose
-# Service orchestration for the backend and database.
-# =============================================================================
-
 services:
-  # ---------------------------------------------------------------------------
-  # MongoDB 7 — Document database
-  # No host ports; only accessible from the internal network.
-  # ---------------------------------------------------------------------------
   mongo:
     image: mongo:7
     restart: unless-stopped
@@ -19,10 +10,6 @@ services:
     networks:
       - recipehub_net
 
-  # ---------------------------------------------------------------------------
-  # API — Backend Node.js / Express
-  # Built from ./backend, exposes port 4000 to the host.
-  # ---------------------------------------------------------------------------
   api:
     build: ./backend
     restart: unless-stopped
@@ -30,25 +17,16 @@ services:
       - "4000:4000"
     depends_on:
       - mongo
-    volumes:
-      - ./backend/src:/app/src
     environment:
       PORT: ${PORT}
       MONGO_URI: ${MONGO_URI}
       JWT_SECRET: ${JWT_SECRET}
-    command: npx nodemon src/server.js
     networks:
       - recipehub_net
 
-# ---------------------------------------------------------------------------
-# Internal network for service-to-service communication
-# ---------------------------------------------------------------------------
 networks:
   recipehub_net:
     driver: bridge
 
-# ---------------------------------------------------------------------------
-# Persistent volumes
-# ---------------------------------------------------------------------------
 volumes:
   mongo_data:

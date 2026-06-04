@@ -8,8 +8,8 @@ const { protect } = require('../middlewares/auth.middleware');
 
 const router = Router();
 
-router.get('/:id/comments', getComments);
-router.post('/:id/comments', protect, createComment);
+router.get('/recipes/:id/comments', getComments);
+router.post('/recipes/:id/comments', protect, createComment);
 router.delete('/comments/:id', protect, deleteComment);
 
 module.exports = router;

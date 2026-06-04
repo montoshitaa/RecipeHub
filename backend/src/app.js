@@ -16,6 +16,6 @@ app.get('/api/health', (req, res) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/recipes', recipeRoutes);
-app.use('/api/recipes', commentRoutes);
+app.use('/api', commentRoutes);
 
 module.exports = app;

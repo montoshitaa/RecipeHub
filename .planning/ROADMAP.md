@@ -6,7 +6,7 @@ RecipeHub frontend is built from an AI Studio-generated scaffold (`frontend-to-i
 
 ## Phases
 
-- [ ] **Phase 1: Foundation & Authentication** — Adapt scaffold, configure real API, auth UI with real backend
+- [x] **Phase 1: Foundation & Authentication** — Adapt scaffold, configure real API, auth UI with real backend (completed 2026-06-05)
 - [ ] **Phase 2: Browse & Discover** — Recipe feed, filtering/search, detail page, comments with ratings
 - [ ] **Phase 3: Recipe Management** — Create/edit/delete recipes with dynamic forms and image upload
 - [ ] **Phase 4: Polish & UX** — Responsive design audit, loading/empty/error states across all views
@@ -36,7 +36,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 01-02-PLAN.md — Auth end-to-end: axios JWT client, AuthContext with real API rehydration, Login/Register with RHF+zod+shadcn, Header cleanup, ProtectedRoute, 404 page, Toaster, run documentation
+- [x] 01-02-PLAN.md — Auth end-to-end: axios JWT client, AuthContext with real API rehydration, Login/Register with RHF+zod+shadcn, Header cleanup, ProtectedRoute, 404 page, Toaster, run documentation
 
 ### Phase 2: Browse & Discover
 
@@ -111,7 +111,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Authentication | 1/2 | In Progress|  |
+| 1. Foundation & Authentication | 2/2 | Complete   | 2026-06-05 |
 | 2. Browse & Discover | 0/3 | Not started | - |
 | 3. Recipe Management | 0/3 | Not started | - |
 | 4. Polish & UX | 0/2 | Not started | - |

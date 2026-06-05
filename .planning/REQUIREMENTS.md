@@ -31,10 +31,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Authentication
 
-- [ ] **AUTH-01**: User can register with email and password
-- [ ] **AUTH-02**: User can log in and stay logged in across sessions (JWT stored)
-- [ ] **AUTH-03**: User can log out from any page
-- [ ] **AUTH-04**: Unauthenticated users are redirected to login for protected routes
+- [x] **AUTH-01**: User can register with email and password
+- [x] **AUTH-02**: User can log in and stay logged in across sessions (JWT stored)
+- [x] **AUTH-03**: User can log out from any page
+- [x] **AUTH-04**: Unauthenticated users are redirected to login for protected routes
 
 ### UI/UX Polish
 
@@ -42,7 +42,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **UX-02**: All data-fetching views show loading skeleton or spinner states
 - [ ] **UX-03**: All forms show inline field validation errors and toast notifications on submit
 - [ ] **UX-04**: Empty states show friendly messages when no data exists (empty feed, no comments, etc.)
-- [ ] **UX-05**: 404 page shown for invalid routes
+- [x] **UX-05**: 404 page shown for invalid routes
 - [ ] **UX-06**: Difficulty badges use color coding (Easy=green, Medium=yellow, Hard=red)
 - [ ] **UX-07**: Ingredient checklist on detail page (check off as you cook, local state only)
 
@@ -50,7 +50,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **SETUP-01**: Adapt frontend-to-implement/ scaffold — strip Express server and @google/genai
 - [x] **SETUP-02**: Install and configure additional dependencies (shadcn/ui init, react-hook-form, zod, react-dropzone, sonner, axios)
-- [ ] **SETUP-03**: Configure API client with base URL, JWT interceptor for auth headers
+- [x] **SETUP-03**: Configure API client with base URL, JWT interceptor for auth headers
 - [x] **SETUP-04**: Rename/move scaffold to become the project frontend directory
 
 ## v2 Requirements
@@ -88,10 +88,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | Phase 1 — Foundation & Authentication | Pending |
-| AUTH-02 | Phase 1 — Foundation & Authentication | Pending |
-| AUTH-03 | Phase 1 — Foundation & Authentication | Pending |
-| AUTH-04 | Phase 1 — Foundation & Authentication | Pending |
+| AUTH-01 | Phase 1 — Foundation & Authentication | Complete |
+| AUTH-02 | Phase 1 — Foundation & Authentication | Complete |
+| AUTH-03 | Phase 1 — Foundation & Authentication | Complete |
+| AUTH-04 | Phase 1 — Foundation & Authentication | Complete |
 | BROWSE-01 | Phase 2 — Browse & Discover | Pending |
 | BROWSE-02 | Phase 2 — Browse & Discover | Pending |
 | BROWSE-03 | Phase 2 — Browse & Discover | Pending |
@@ -109,12 +109,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | UX-02 | Phase 4 — Polish & UX | Pending |
 | UX-03 | Phase 3 — Recipe Management | Pending |
 | UX-04 | Phase 4 — Polish & UX | Pending |
-| UX-05 | Phase 1 — Foundation & Authentication | Pending |
+| UX-05 | Phase 1 — Foundation & Authentication | Complete |
 | UX-06 | Phase 2 — Browse & Discover | Pending |
 | UX-07 | Phase 2 — Browse & Discover | Pending |
 | SETUP-01 | Phase 1 — Foundation & Authentication | Complete |
 | SETUP-02 | Phase 1 — Foundation & Authentication | Complete |
-| SETUP-03 | Phase 1 — Foundation & Authentication | Pending |
+| SETUP-03 | Phase 1 — Foundation & Authentication | Complete |
 | SETUP-04 | Phase 1 — Foundation & Authentication | Complete |
 
 **Coverage:**

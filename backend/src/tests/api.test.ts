@@ -1,9 +1,9 @@
 process.env.JWT_SECRET = 'test-secret';
 
-const mongoose = require('mongoose');
-const request = require('supertest');
-const { MongoMemoryServer } = require('mongodb-memory-server');
-const app = require('../app');
+import mongoose from 'mongoose';
+import request from 'supertest';
+import { MongoMemoryServer } from 'mongodb-memory-server';
+import app from '../app';
 
 jest.setTimeout(120000);
 
@@ -13,13 +13,13 @@ const buildRecipePayload = () => ({
   category: 'Dinner',
   cookTimeMin: 35,
   servings: 4,
-  difficulty: 'Easy',
+  difficulty: 'Easy' as const,
   ingredients: [{ name: 'Chicken', amount: 1, unit: 'kg' }],
   steps: ['Boil water', 'Add chicken', 'Simmer'],
   tags: ['test', 'soup'],
 });
 
-const buildTestMongoUri = (mongoUri) => {
+const buildTestMongoUri = (mongoUri: string): string => {
   const testUri = mongoUri.replace(/\/([^/?]+)(\?|$)/, '/recipehub_test$2');
 
   if (testUri === mongoUri) {
@@ -39,21 +39,21 @@ const registerUser = async (email = 'test-user@example.com') => {
     })
     .expect(201);
 
-  return response.body;
+  return response.body as { user: Record<string, unknown>; token: string };
 };
 
-const createRecipe = async (token) => {
+const createRecipe = async (token: string) => {
   const response = await request(app)
     .post('/api/recipes')
     .set('Authorization', `Bearer ${token}`)
     .send(buildRecipePayload())
     .expect(201);
 
-  return response.body.recipe;
+  return response.body.recipe as Record<string, unknown>;
 };
 
 describe('RecipeHub API', () => {
-  let mongoServer;
+  let mongoServer: MongoMemoryServer | undefined;
 
   beforeAll(async () => {
     if (process.env.MONGO_URI) {
@@ -98,7 +98,7 @@ describe('RecipeHub API', () => {
     const response = await registerUser();
 
     expect(response.user.email).toBe('test-user@example.com');
-    expect(response.user.password).toBeUndefined();
+    expect((response.user as Record<string, unknown>).password).toBeUndefined();
     expect(response.token).toBeDefined();
   });
 
@@ -113,7 +113,7 @@ describe('RecipeHub API', () => {
     const recipe = await createRecipe(token);
 
     expect(recipe.title).toBe('Test Chicken Soup');
-    expect(recipe.authorId.email).toBe('test-user@example.com');
+    expect((recipe.authorId as Record<string, unknown>).email).toBe('test-user@example.com');
   });
 
   test('POST /api/recipes/:id/comments creates a comment for an authenticated user', async () => {

@@ -1,6 +1,30 @@
-const mongoose = require('mongoose');
+import mongoose, { Schema, Document, Model } from 'mongoose';
 
-const recipeSchema = new mongoose.Schema({
+export interface IIngredient {
+  name: string;
+  amount: number;
+  unit: string;
+}
+
+export interface IRecipe {
+  title: string;
+  description: string;
+  category: string;
+  cookTimeMin: number;
+  servings: number;
+  difficulty: 'Easy' | 'Medium' | 'Hard';
+  ingredients: IIngredient[];
+  steps: string[];
+  tags: string[];
+  authorId: mongoose.Types.ObjectId;
+  imageUrl?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface IRecipeDocument extends IRecipe, Document {}
+
+const recipeSchema = new Schema<IRecipeDocument>({
   title: {
     type: String,
     required: true,
@@ -56,9 +80,10 @@ const recipeSchema = new mongoose.Schema({
   },
 });
 
-recipeSchema.pre('save', function (next) {
-  this.updatedAt = Date.now();
+recipeSchema.pre<IRecipeDocument>('save', function (next) {
+  this.updatedAt = new Date();
   next();
 });
 
-module.exports = mongoose.model('Recipe', recipeSchema);
+const Recipe: Model<IRecipeDocument> = mongoose.model<IRecipeDocument>('Recipe', recipeSchema);
+export default Recipe;

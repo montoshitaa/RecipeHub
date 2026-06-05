@@ -83,9 +83,14 @@ Plans:
 
 Plans:
 
-- [ ] 03-01: Create/edit recipe form — RHF + Zod, shadcn/ui Form components, useFieldArray for dynamic rows
-- [ ] 03-02: Image upload — react-dropzone, drag-and-drop zone, file preview, backend upload endpoint
-- [ ] 03-03: Edit/delete flows — pre-populated edit form, delete with confirmation, toast notifications
+**Wave 1**
+
+- [ ] 03-01-PLAN.md — Create Recipe vertical slice: shadcn Form, RHF+zod+shadcn RecipeForm with useFieldArray, createRecipe API wrapper, CreateRecipe page, /create protected route, sonner toasts
+
+**Wave 2** *(parallel — no file overlap)*
+
+- [ ] 03-02-PLAN.md — Image upload: react-dropzone drag-and-drop zone replacing URL input, FileReader data URL conversion, preview with remove, type/size validation + warning, URL fallback toggle
+- [ ] 03-03-PLAN.md — Edit & Delete: updateRecipe + deleteRecipe API wrappers, EditRecipe page with pre-populated RecipeForm + auth guard, delete with confirmation dialog, sonner toasts, /edit/:id protected route, upgrade RecipeDetail delete to deleteRecipe wrapper
 
 ### Phase 4: Polish & UX
 

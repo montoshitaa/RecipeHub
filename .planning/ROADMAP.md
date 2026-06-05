@@ -24,13 +24,12 @@ RecipeHub frontend is built from an AI Studio-generated scaffold (`frontend-to-i
   3. User can log in and remain logged in across page refreshes (JWT persisted and verified)
   4. User can log out from any page and be redirected to the home page
   5. Unauthenticated users are redirected to login when accessing protected routes, and a 404 page appears for invalid routes
-**Plans**: 3 plans
+**Plans**: 2 plans
 **UI hint**: yes
 
 Plans:
-- [ ] 01-01: Scaffold adaptation — strip Express/Gemini, install deps, init shadcn/ui, rename directory
-- [ ] 01-02: API client — axios with base URL, JWT interceptor, real endpoint integration
-- [ ] 01-03: Auth UI — login/register forms connected to real backend, protected route gating, logout
+- [ ] 01-01-PLAN.md — Scaffold adaptation: directory rename, strip Express/Gemini/dotenv/autoprefixer, install deps, init shadcn/ui, Vite proxy config
+- [ ] 01-02-PLAN.md — Auth end-to-end: axios JWT client, AuthContext with real API rehydration, Login/Register with RHF+zod+shadcn, Header cleanup, ProtectedRoute, 404 page, Toaster, run documentation
 
 ### Phase 2: Browse & Discover
 **Goal**: Users can browse, filter, search, and view recipes with full detail including comments with star ratings

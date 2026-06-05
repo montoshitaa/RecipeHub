@@ -1,63 +1,70 @@
-// @ts-nocheck — Phase 1 stub; re-implemented with axios in Phase 2
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { apiFetch } from '../api/client';
-import { Recipe } from '../types';
-import { RecipeForm } from '../components/RecipeForm';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
+import { toast } from 'sonner';
 import { useAuth } from '../context/AuthContext';
+import { getRecipe, updateRecipe, deleteRecipe } from '../api/recipes';
+import { RecipeForm } from '../components/RecipeForm';
+import { Recipe } from '../types';
 
 export const EditRecipe: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, token } = useAuth();
 
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   useEffect(() => {
-    const fetchRecipe = async () => {
-      if (!id) return;
-      try {
-        const data = await apiFetch(`/api/recipes/${id}`, { method: "GET" });
-        setRecipe(data);
-
-        // Security authorization check: ensure the recipe author is indeed the current user
+    if (!id) return;
+    setLoading(true);
+    getRecipe(id)
+      .then((data) => {
         if (user && data.authorId !== user._id) {
-          console.warn("Unauthorized attempt to edit recipe. Current user ID:", user._id, "Author ID:", data.authorId);
           navigate('/unauthorized');
+          return;
         }
-      } catch (err: any) {
-        console.error("Failed to load recipe for editing", err);
-        setError(err?.message || "Failed to retrieve recipe details.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchRecipe();
+        setRecipe(data);
+      })
+      .catch((err) => setError(err?.response?.data?.message || 'Failed to load recipe'))
+      .finally(() => setLoading(false));
   }, [id, user, navigate]);
 
   const handleFormSubmit = async (formData: Omit<Recipe, '_id' | 'authorId' | 'createdAt'>) => {
     if (!id) return;
     setIsSubmitting(true);
     try {
-      await apiFetch(`/api/recipes/${id}`, {
-        method: 'PUT',
-        body: JSON.stringify(formData),
-      });
-
-      // Redirect back to the recipe details screen
-      navigate(`/recipes/${id}`);
+      await updateRecipe(id, formData);
+      toast.success('Recipe updated!');
+      navigate('/recipes/' + id);
     } catch (err: any) {
-      console.error('Failed to update recipe:', err);
-      throw err; // bubble up to RecipeForm for rendering
+      toast.error(err?.response?.data?.message || 'Failed to update recipe');
+      throw err; // bubble to RecipeForm for top error banner
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!id) return;
+    setIsDeleting(true);
+    try {
+      await deleteRecipe(id);
+      toast.success('Recipe deleted');
+      navigate('/');
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message || 'Failed to delete recipe');
+      setIsDeleting(false);
+      setShowDeleteConfirm(false);
     }
   };
 
@@ -107,6 +114,8 @@ export const EditRecipe: React.FC = () => {
     );
   }
 
+  const isRecipeOwner = user && recipe && recipe.authorId === user._id;
+
   return (
     <div className="max-w-4xl mx-auto space-y-6 animate-fade-in" id={`edit-recipe-page-${recipe._id}`}>
       <div className="border border-border-custom bg-surface p-6 sm:p-8">
@@ -123,6 +132,35 @@ export const EditRecipe: React.FC = () => {
         onSubmit={handleFormSubmit}
         isSubmitting={isSubmitting}
       />
+
+      {isRecipeOwner && (
+        <div className="border border-border-custom bg-surface p-4 sm:p-6 mt-6">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+              <p className="font-serif text-lg font-bold text-danger">Danger Zone</p>
+              <p className="text-xs text-text-muted font-mono">Permanently delete this recipe and all associated data.</p>
+            </div>
+            {!showDeleteConfirm ? (
+              <button type="button" onClick={() => setShowDeleteConfirm(true)}
+                className="btn-primary border border-danger bg-white text-danger hover:bg-danger hover:text-white px-6 py-2.5 font-mono text-xs font-bold uppercase tracking-wider cursor-pointer transition-colors">
+                Delete Recipe
+              </button>
+            ) : (
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-mono text-danger font-bold">Are you sure?</span>
+                <button type="button" disabled={isDeleting} onClick={handleDelete}
+                  className="bg-danger text-white px-4 py-2 text-xs uppercase font-mono font-bold cursor-pointer disabled:opacity-50">
+                  {isDeleting ? 'Deleting...' : 'Confirm Delete'}
+                </button>
+                <button type="button" onClick={() => setShowDeleteConfirm(false)}
+                  className="border border-border-custom px-4 py-2 text-xs uppercase font-mono cursor-pointer">
+                  Cancel
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

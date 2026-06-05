@@ -39,5 +39,19 @@ export const createRecipe = async (
   return { ...recipe, time: recipe.cookTimeMin };
 };
 
+export const updateRecipe = async (
+  id: string,
+  data: Partial<Omit<Recipe, '_id' | 'authorId' | 'createdAt'>>
+): Promise<Recipe> => {
+  const { time, ...rest } = data;
+  const payload = { ...rest, ...(time !== undefined ? { cookTimeMin: time } : {}) };
+  const res = await api.put(`/api/recipes/${id}`, payload);
+  const recipe = res.data.recipe as Recipe & { cookTimeMin: number };
+  return { ...recipe, time: recipe.cookTimeMin };
+};
+
+export const deleteRecipe = (id: string): Promise<void> =>
+  api.delete(`/api/recipes/${id}`).then(() => undefined);
+
 export const deleteComment = (commentId: string): Promise<void> =>
   api.delete(`/api/comments/${commentId}`).then(() => undefined);

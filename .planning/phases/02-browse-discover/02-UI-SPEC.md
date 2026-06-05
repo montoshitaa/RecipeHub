@@ -66,15 +66,17 @@ Exceptions: none — standard Tailwind 4px scale used throughout.
 | Body | 15px (text-[15px]) | 400 (regular) | 1.6 | IBM Plex Sans (--font-sans) |
 | Label | 11px (text-[11px]) | 600 (semibold) | 1.3 | IBM Plex Mono (--font-mono), uppercase tracking-widest |
 | Heading | 24px (text-2xl) | 600 (semibold) | 1.2 | IBM Plex Serif (--font-serif), tracking-tight |
-| Display | 36px (text-4xl) / 48px (text-5xl) | 700 (bold) | 1.1 | IBM Plex Serif (--font-serif), tracking-tight |
+| Display | 36px (text-4xl) | 600 (semibold) | 1.1 | IBM Plex Serif (--font-serif), tracking-tight |
+
+> **Responsive variant:** Display scales to 48px (text-5xl) at the `sm:` breakpoint (≥640px). This is a breakpoint variant of the same 36px role — NOT a separate font size. Source: `text-4xl sm:text-5xl` from RecipeDetail.tsx and Home.tsx.
 
 **Font families by role:**
 - Body: `IBM Plex Sans` — paragraph text, input values, comment text, ingredient names, step instructions
 - Label: `IBM Plex Mono` — form field labels, buttons, nav items, filter labels, badge text, metadata captions, all in `uppercase tracking-widest`
 - Heading: `IBM Plex Serif` — page titles, recipe titles (cards), section headings (Reviews, Ingredients, Preparation Steps)
-- Display: `IBM Plex Serif` — hero recipe title on detail page (text-4xl sm:text-5xl), home page editorial title ("Recipe Catalog")
+- Display: `IBM Plex Serif` — hero recipe title on detail page, home page editorial title ("Recipe Catalog"). Starts at 36px (text-4xl), scales to 48px (text-5xl) at sm breakpoint
 
-**Source:** Phase 01 UI-SPEC for body, label, heading. Display size added for Phase 02 — derived from scaffold RecipeDetail.tsx line 282 (`text-4xl sm:text-5xl`) and Home.tsx line 72 (`text-4xl sm:text-5xl`). [Default: largest existing heading usage in scaffold.]
+**Source:** Phase 01 UI-SPEC for body, label, heading. Display size added for Phase 02 — derived from scaffold RecipeDetail.tsx line 282 and Home.tsx line 72, both using `text-4xl sm:text-5xl` (single role with responsive variant, not two separate sizes). [Default: largest existing heading usage in scaffold.]
 
 ---
 
@@ -158,13 +160,13 @@ Stars use `--color-star` (#e67e22 / orange-gold) for filled state, `--color-bord
 | Post comment loading | "Submitting feedback..." — replaces button text during submission |
 | Unauthenticated comment CTA | "You must possess an active account to share feedback and post star reviews." |
 | Unauthenticated comment link | **Sign in to leave a comment** — accent button linking to `/login` |
-| Comment delete button | **Delete** — mono uppercase, danger-colored, inline next to star rating |
+| Comment delete button | **Delete Comment** — mono uppercase, danger-colored, inline next to star rating |
 | Comment delete confirmation | `window.confirm("Are you sure you want to delete your review?")` — browser native dialog |
 | Recipe edit button | **Edit recipe** — mono uppercase, secondary button, visible only to recipe author |
-| Recipe delete button | **Delete** — mono uppercase, danger-outlined button |
+| Recipe delete button | **Delete Recipe** — mono uppercase, danger-outlined button |
 | Recipe delete confirmation heading | "Confirm Deletion?" — mono uppercase danger label in red-bordered confirmation box |
-| Recipe delete confirm button | **Confirm** — danger background, white text, shows "Deleting..." while in progress |
-| Recipe delete cancel button | **Cancel** — secondary button |
+| Recipe delete confirm button | **Confirm Deletion** — danger background, white text, shows "Deleting..." while in progress |
+| Recipe delete cancel button | **Keep Recipe** — secondary button |
 | Ingredient table heading (amount) | "Amount" — right-aligned mono uppercase |
 | Ingredient table heading (name) | "Ingredient description" — left-aligned mono uppercase |
 | Step numbering format | Zero-padded 2-digit: `01.`, `02.`, `03.` — mono bold |
@@ -176,8 +178,8 @@ Stars use `--color-star` (#e67e22 / orange-gold) for filled state, `--color-bord
 
 | Action | Trigger | Confirmation | Reversible |
 |--------|---------|-------------|------------|
-| Delete comment | "Delete" button (visible only to comment author) | `window.confirm("Are you sure you want to delete your review?")` | No |
-| Delete recipe | "Delete" button → inline confirmation box | Inline "Confirm Deletion?" box with Confirm/Cancel buttons (not browser native) | No |
+| Delete comment | "Delete Comment" button (visible only to comment author) | `window.confirm("Are you sure you want to delete your review?")` | No |
+| Delete recipe | "Delete Recipe" button → inline confirmation box | Inline "Confirm Deletion?" box with Confirm Deletion / Keep Recipe buttons (not browser native) | No |
 
 **Source:** All copy extracted from existing scaffold pages: Home.tsx (lines 72-200), RecipeDetail.tsx (lines 140-552), RecipeCard.tsx (lines 85-183). Phase 02 adapts these pages to real backend — copy remains consistent. [Defaults from scaffold — no user decisions needed.]
 
@@ -231,8 +233,8 @@ cd frontend && npx shadcn@latest add badge select textarea skeleton checkbox sep
 - **Star rating (view):** Display-only, filled stars in `--color-star`, empty in `--color-border-custom`
 - **Star rating (interactive):** Clickable stars in comment form, hover scale 110%, active scale 95%, numeric indicator shows `{rating} / 5`
 - **Comment post:** After successful POST, refetch comments from API (do not manually insert). Reset form fields. Show toast on success/failure via sonner.
-- **Comment delete:** Click "Delete" → `window.confirm()` → on confirm, DELETE API call → refetch comments. Show toast on success.
-- **Recipe delete:** Click "Delete" → inline confirmation box appears → click "Confirm" → DELETE API call → navigate to `/` on success. Show toast. Show error alert on failure.
+- **Comment delete:** Click "Delete Comment" → `window.confirm()` → on confirm, DELETE API call → refetch comments. Show toast on success.
+- **Recipe delete:** Click "Delete Recipe" → inline confirmation box appears → click "Confirm Deletion" → DELETE API call → navigate to `/` on success. Show toast. Show error alert on failure.
 - **Back navigation:** "Back to Catalog" link at top (mono uppercase + ArrowLeft icon)
 
 ### Loading States

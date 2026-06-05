@@ -6,8 +6,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Clock, Utensils, ArrowLeft, ArrowRight } from 'lucide-react';
+import { toast } from 'sonner';
 import { api } from '../api/client';
-import { getRecipe, getComments } from '../api/recipes';
+import { getRecipe, getComments, postComment, deleteComment } from '../api/recipes';
+import { Checkbox } from '../components/ui/checkbox';
+import { Textarea } from '../components/ui/textarea';
 import { Recipe, Comment } from '../types';
 import { useAuth } from '../context/AuthContext';
 import { StarRating } from '../components/StarRating';
@@ -31,6 +34,9 @@ export const RecipeDetail: React.FC = () => {
   const [newCommentRating, setNewCommentRating] = useState(5);
   const [submittingComment, setSubmittingComment] = useState(false);
   const [commentError, setCommentError] = useState<string | null>(null);
+
+  // Ingredient checklist (UX-07) — local state only, resets on page leave
+  const [checkedIngredients, setCheckedIngredients] = useState<Set<number>>(new Set());
 
   // Seed avatar fallback gradient
   const getAvatarBgColor = (name: string) => {
@@ -78,7 +84,7 @@ export const RecipeDetail: React.FC = () => {
     setCommentError(null);
 
     try {
-      await api.post(`/api/recipes/${id}/comments`, {
+      await postComment(id, {
         content: newCommentText.trim(),
         rating: newCommentRating,
       });
@@ -86,12 +92,14 @@ export const RecipeDetail: React.FC = () => {
       // Reset box
       setNewCommentText('');
       setNewCommentRating(5);
-      
-      // Refetch comments to maintain accurate state without manual insertions as requested
+      toast.success('Comment posted');
+
+      // Refetch comments to maintain accurate state
       const freshComments = await getComments(id);
       setComments(freshComments || []);
     } catch (err: any) {
-      setCommentError(err?.message || 'Failed to submit comment. Please try again.');
+      toast.error(err?.response?.data?.message || 'Failed to post comment');
+      setCommentError(err?.response?.data?.message || 'Failed to submit comment. Please try again.');
     } finally {
       setSubmittingComment(false);
     }
@@ -104,14 +112,15 @@ export const RecipeDetail: React.FC = () => {
     if (!confirmed) return;
 
     try {
-      await api.delete(`/api/comments/${commentId}`);
+      await deleteComment(commentId);
+      toast.success('Comment deleted');
       // Refetch
       if (id) {
         const freshComments = await getComments(id);
         setComments(freshComments || []);
       }
     } catch (err: any) {
-      alert(err?.message || "Failed to delete comment.");
+      toast.error(err?.response?.data?.message || 'Failed to delete comment');
     }
   };
 
@@ -358,19 +367,37 @@ export const RecipeDetail: React.FC = () => {
             <table className="w-full border-collapse text-left text-sm font-mono leading-relaxed select-text">
               <thead>
                 <tr className="border-b border-border-custom text-[11px] text-text-muted uppercase">
+                  <th className="py-2 w-10"></th>
                   <th className="py-2 font-bold">Ingredient description</th>
                   <th className="py-2 text-right font-bold">Amount</th>
                 </tr>
               </thead>
               <tbody>
-                {recipe.ingredients && recipe.ingredients.map((ing, idx) => (
-                  <tr key={idx} className="border-b border-border-custom/40 last:border-0 hover:bg-neutral-50">
-                    <td className="py-2.5 font-sans font-medium text-text-custom">{ing.name}</td>
-                    <td className="py-2.5 text-right text-text-muted font-mono whitespace-nowrap">
-                      {ing.amount} <span className="text-xs">{ing.unit}</span>
-                    </td>
-                  </tr>
-                ))}
+                {recipe.ingredients && recipe.ingredients.map((ing, idx) => {
+                  const isChecked = checkedIngredients.has(idx);
+                  return (
+                    <tr key={idx} className="border-b border-border-custom/40 last:border-0 hover:bg-neutral-50">
+                      <td className="py-2.5 align-middle">
+                        <Checkbox
+                          checked={isChecked}
+                          onCheckedChange={() => {
+                            const next = new Set(checkedIngredients);
+                            if (isChecked) {
+                              next.delete(idx);
+                            } else {
+                              next.add(idx);
+                            }
+                            setCheckedIngredients(next);
+                          }}
+                        />
+                      </td>
+                      <td className={`py-2.5 font-sans font-medium text-text-custom${isChecked ? ' line-through decoration-border-custom/50 text-text-muted/60' : ''}`}>{ing.name}</td>
+                      <td className={`py-2.5 text-right text-text-muted font-mono whitespace-nowrap${isChecked ? ' line-through decoration-border-custom/50 text-text-muted/60' : ''}`}>
+                        {ing.amount} <span className="text-xs">{ing.unit}</span>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -488,7 +515,7 @@ export const RecipeDetail: React.FC = () => {
                 <label className="block text-[11px] font-mono uppercase tracking-wider text-text-muted mb-1.5 font-bold">
                   Write your comment...
                 </label>
-                <textarea
+                <Textarea
                   rows={4}
                   value={newCommentText}
                   onChange={(e) => setNewCommentText(e.target.value)}

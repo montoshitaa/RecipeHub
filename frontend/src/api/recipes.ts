@@ -30,5 +30,14 @@ export const postComment = (
 ): Promise<Comment> =>
   api.post(`/api/recipes/${recipeId}/comments`, data).then((res) => res.data);
 
+export const createRecipe = async (
+  data: Omit<Recipe, '_id' | 'authorId' | 'createdAt'>
+): Promise<Recipe> => {
+  const { time, ...rest } = data;
+  const res = await api.post('/api/recipes', { ...rest, cookTimeMin: time });
+  const recipe = res.data.recipe as Recipe & { cookTimeMin: number };
+  return { ...recipe, time: recipe.cookTimeMin };
+};
+
 export const deleteComment = (commentId: string): Promise<void> =>
   api.delete(`/api/comments/${commentId}`).then(() => undefined);

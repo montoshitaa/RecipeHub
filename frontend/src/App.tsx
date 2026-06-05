@@ -20,6 +20,7 @@ import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { NotFound } from './pages/NotFound';
 import { Home } from './pages/Home';
+import { RecipeDetail } from './pages/RecipeDetail';
 
 export default function App() {
   return (
@@ -37,6 +38,7 @@ export default function App() {
               <Routes>
                 {/* Public Routes */}
                 <Route path="/" element={<Home />} />
+                <Route path="/recipes/:id" element={<RecipeDetail />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
 

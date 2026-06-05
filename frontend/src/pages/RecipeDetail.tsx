@@ -11,6 +11,7 @@ import { api } from '../api/client';
 import { getRecipe, getComments, postComment, deleteComment } from '../api/recipes';
 import { Checkbox } from '../components/ui/checkbox';
 import { Textarea } from '../components/ui/textarea';
+import { Separator } from '../components/ui/separator';
 import { Recipe, Comment } from '../types';
 import { useAuth } from '../context/AuthContext';
 import { StarRating } from '../components/StarRating';
@@ -426,6 +427,8 @@ export const RecipeDetail: React.FC = () => {
           ))}
         </div>
       </div>
+
+      <Separator className="my-4 bg-border-custom/50" />
 
       {/* Reviews & reviews feedback section */}
       <div className="grid grid-cols-1 lg:grid-cols-10 gap-8" id="comments-section-split">

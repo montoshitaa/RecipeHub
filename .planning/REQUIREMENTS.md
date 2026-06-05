@@ -48,10 +48,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Setup & Integration
 
-- [ ] **SETUP-01**: Adapt frontend-to-implement/ scaffold — strip Express server and @google/genai
-- [ ] **SETUP-02**: Install and configure additional dependencies (shadcn/ui init, react-hook-form, zod, react-dropzone, sonner, axios)
+- [x] **SETUP-01**: Adapt frontend-to-implement/ scaffold — strip Express server and @google/genai
+- [x] **SETUP-02**: Install and configure additional dependencies (shadcn/ui init, react-hook-form, zod, react-dropzone, sonner, axios)
 - [ ] **SETUP-03**: Configure API client with base URL, JWT interceptor for auth headers
-- [ ] **SETUP-04**: Rename/move scaffold to become the project frontend directory
+- [x] **SETUP-04**: Rename/move scaffold to become the project frontend directory
 
 ## v2 Requirements
 
@@ -112,12 +112,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | UX-05 | Phase 1 — Foundation & Authentication | Pending |
 | UX-06 | Phase 2 — Browse & Discover | Pending |
 | UX-07 | Phase 2 — Browse & Discover | Pending |
-| SETUP-01 | Phase 1 — Foundation & Authentication | Pending |
-| SETUP-02 | Phase 1 — Foundation & Authentication | Pending |
+| SETUP-01 | Phase 1 — Foundation & Authentication | Complete |
+| SETUP-02 | Phase 1 — Foundation & Authentication | Complete |
 | SETUP-03 | Phase 1 — Foundation & Authentication | Pending |
-| SETUP-04 | Phase 1 — Foundation & Authentication | Pending |
+| SETUP-04 | Phase 1 — Foundation & Authentication | Complete |
 
 **Coverage:**
+
 - v1 requirements: 28 total
 - Mapped to phases: 28
 - Unmapped: 0 ✓

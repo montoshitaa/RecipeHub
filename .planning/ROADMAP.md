@@ -32,7 +32,7 @@ RecipeHub frontend is built from an AI Studio-generated scaffold (`frontend-to-i
 Plans:
 **Wave 1**
 
-- [ ] 01-01-PLAN.md — Scaffold adaptation: directory rename, strip Express/Gemini/dotenv/autoprefixer, install deps, init shadcn/ui, Vite proxy config
+- [x] 01-01-PLAN.md — Scaffold adaptation: directory rename, strip Express/Gemini/dotenv/autoprefixer, install deps, init shadcn/ui, Vite proxy config
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
@@ -111,7 +111,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Authentication | 0/3 | Not started | - |
+| 1. Foundation & Authentication | 1/2 | In Progress|  |
 | 2. Browse & Discover | 0/3 | Not started | - |
 | 3. Recipe Management | 0/3 | Not started | - |
 | 4. Polish & UX | 0/2 | Not started | - |

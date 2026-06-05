@@ -7,8 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Clock, Utensils, ArrowLeft, ArrowRight } from 'lucide-react';
 import { toast } from 'sonner';
-import { api } from '../api/client';
-import { getRecipe, getComments, postComment, deleteComment } from '../api/recipes';
+import { getRecipe, getComments, postComment, deleteComment, deleteRecipe } from '../api/recipes';
 import { Checkbox } from '../components/ui/checkbox';
 import { Textarea } from '../components/ui/textarea';
 import { Separator } from '../components/ui/separator';
@@ -130,11 +129,13 @@ export const RecipeDetail: React.FC = () => {
     if (!id || !recipe || !token) return;
     setDeletingRecipe(true);
     try {
-      await api.delete(`/api/recipes/${id}`);
+      await deleteRecipe(id);
+      toast.success('Recipe deleted');
       navigate('/');
     } catch (err: any) {
-      alert(err?.message || "Error deleting recipe.");
+      toast.error(err?.response?.data?.message || 'Failed to delete recipe');
       setDeletingRecipe(false);
+      setShowDeleteConfirm(false);
     }
   };
 

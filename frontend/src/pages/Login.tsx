@@ -7,17 +7,32 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { apiFetch } from '../api/client';
+import { login as authApiLogin, normalizeUser } from '../api/auth';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { toast } from 'sonner';
+import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
+import { Label } from '../components/ui/label';
+import { Card, CardContent, CardHeader } from '../components/ui/card';
+
+const loginSchema = z.object({
+  email: z.string().email('Invalid email address'),
+  password: z.string().min(1, 'Password is required'),
+});
+
+type LoginFormData = z.infer<typeof loginSchema>;
 
 export const Login: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { login, token } = useAuth();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+  });
 
   // If already logged in, redirect to home immediately
   useEffect(() => {
@@ -29,36 +44,17 @@ export const Login: React.FC = () => {
   // Read target return route for user convenience
   const fromPath = (location.state as any)?.from?.pathname || '/';
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (data: LoginFormData) => {
     setError(null);
-
-    if (!email.trim() || !password) {
-      setError('Email and password fields are required.');
-      return;
-    }
-
-    setSubmitting(true);
     try {
-      const response = await apiFetch('/api/auth/login', {
-        method: "POST",
-        body: JSON.stringify({
-          email: email.trim(),
-          password: password,
-        }),
-      });
-
-      if (response && response.token && response.user) {
-        login(response.token, response.user);
-        navigate(fromPath, { replace: true });
-      } else {
-        throw new Error('Authentication response was incomplete.');
-      }
+      const response = await authApiLogin(data.email, data.password);
+      const backendUser = response.data.user;
+      login(response.data.token, normalizeUser(backendUser));
+      toast.success('Welcome back!');
+      navigate(fromPath, { replace: true });
     } catch (err: any) {
-      console.error('Login error', err);
-      setError(err?.message || 'Invalid email or password.');
-    } finally {
-      setSubmitting(false);
+      const message = err.response?.data?.message || 'Invalid email or password.';
+      setError(message);
     }
   };
 
@@ -82,20 +78,22 @@ export const Login: React.FC = () => {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* Email */}
           <div>
             <label className="block text-[11px] uppercase tracking-widest font-mono text-text-custom mb-2 font-bold">
               Email Address *
             </label>
-            <input
+            <Input
+              id="email"
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              {...register('email')}
               placeholder="you@domain.com"
-              required
               className="w-full bg-[#fcfcfc] border border-border-custom p-3.5 text-text-custom font-sans focus:outline-none focus:border-text-custom focus:bg-white transition-all text-sm"
             />
+            {errors.email && (
+              <p className="text-danger text-[11px] font-mono mt-1">{errors.email.message}</p>
+            )}
           </div>
 
           {/* Password */}
@@ -103,24 +101,26 @@ export const Login: React.FC = () => {
             <label className="block text-[11px] uppercase tracking-widest font-mono text-text-custom mb-2 font-bold">
               Password *
             </label>
-            <input
+            <Input
+              id="password"
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              {...register('password')}
               placeholder="••••••••"
-              required
               className="w-full bg-[#fcfcfc] border border-border-custom p-3.5 text-text-custom font-sans focus:outline-none focus:border-text-custom focus:bg-white transition-all text-sm"
             />
+            {errors.password && (
+              <p className="text-danger text-[11px] font-mono mt-1">{errors.password.message}</p>
+            )}
           </div>
 
           {/* Submit */}
-          <button
+          <Button
             type="submit"
-            disabled={submitting}
-            className="btn-primary w-full border border-text-custom bg-text-custom hover:bg-white hover:text-text-custom text-white py-3.5 font-mono text-xs uppercase tracking-widest font-bold transition-all cursor-pointer disabled:opacity-50 disabled:cursor-wait shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)] hover:shadow-none translate-y-0 hover:translate-y-1"
+            disabled={isSubmitting}
+            className="w-full border border-text-custom bg-text-custom hover:bg-white hover:text-text-custom text-white py-3.5 font-mono text-xs uppercase tracking-widest font-bold transition-all cursor-pointer disabled:opacity-50 disabled:cursor-wait shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)] hover:shadow-none translate-y-0 hover:translate-y-1"
           >
-            {submitting ? 'Authenticating...' : 'Sign in'}
-          </button>
+            {isSubmitting ? 'Authenticating...' : 'Sign in'}
+          </Button>
         </form>
 
         <div className="border-t border-border-custom pt-5 text-center">

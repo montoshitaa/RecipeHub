@@ -7,64 +7,48 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { apiFetch } from '../api/client';
+import { register as authApiRegister, normalizeUser } from '../api/auth';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { toast } from 'sonner';
+import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
+import { Label } from '../components/ui/label';
+
+const registerSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  email: z.string().email('Invalid email address'),
+  password: z.string().min(8, 'Password must be at least 8 characters'),
+  bio: z.string().optional(),
+});
+
+type RegisterFormData = z.infer<typeof registerSchema>;
 
 export const Register: React.FC = () => {
   const navigate = useNavigate();
   const { login, token } = useAuth();
 
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [bio, setBio] = useState('');
-
-  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { register: formRegister, handleSubmit, formState: { errors, isSubmitting } } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
+  });
 
   useEffect(() => {
     if (token) navigate('/');
   }, [token, navigate]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (data: RegisterFormData) => {
     setError(null);
-
-    // Initial validations
-    if (!name.trim() || !email.trim() || !password) {
-      setError('Full name, email, and password fields are required.');
-      return;
-    }
-
-    if (password.length < 8) {
-      setError('Password must be at least 8 characters long.');
-      return;
-    }
-
-    setSubmitting(true);
     try {
-      const response = await apiFetch('/api/auth/register', {
-        method: 'POST',
-        body: JSON.stringify({
-          name: name.trim(),
-          email: email.trim(),
-          password: password,
-          bio: bio.trim() || undefined,
-        }),
-      });
-
-      if (response && response.token && response.user) {
-        login(response.token, response.user);
-        navigate('/');
-      } else {
-        throw new Error('Registration response was incomplete.');
-      }
+      const response = await authApiRegister(data.name, data.email, data.password, data.bio);
+      const backendUser = response.data.user;
+      login(response.data.token, normalizeUser(backendUser));
+      toast.success('Account created!');
+      navigate('/');
     } catch (err: any) {
-      console.error('Registration error:', err);
-      setError(
-        err?.message || 'An account with this email may already exist, or registration failed.'
-      );
-    } finally {
-      setSubmitting(false);
+      const message = err.response?.data?.message || 'Registration failed.';
+      setError(message);
     }
   };
 
@@ -88,20 +72,22 @@ export const Register: React.FC = () => {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* Full Name */}
           <div>
             <label className="block text-[11px] uppercase tracking-widest font-mono text-text-custom mb-2 font-bold">
               Full Name *
             </label>
-            <input
+            <Input
+              id="name"
               type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              {...formRegister('name')}
               placeholder="e.g. Alice Green"
-              required
               className="w-full bg-[#fcfcfc] border border-border-custom p-3.5 text-text-custom font-sans focus:outline-none focus:border-text-custom focus:bg-white transition-all text-sm"
             />
+            {errors.name && (
+              <p className="text-danger text-[11px] font-mono mt-1">{errors.name.message}</p>
+            )}
           </div>
 
           {/* Email */}
@@ -109,14 +95,16 @@ export const Register: React.FC = () => {
             <label className="block text-[11px] uppercase tracking-widest font-mono text-text-custom mb-2 font-bold">
               Email Address *
             </label>
-            <input
+            <Input
+              id="email"
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              {...formRegister('email')}
               placeholder="you@domain.com"
-              required
               className="w-full bg-[#fcfcfc] border border-border-custom p-3.5 text-text-custom font-sans focus:outline-none focus:border-text-custom focus:bg-white transition-all text-sm"
             />
+            {errors.email && (
+              <p className="text-danger text-[11px] font-mono mt-1">{errors.email.message}</p>
+            )}
           </div>
 
           {/* Password */}
@@ -124,15 +112,16 @@ export const Register: React.FC = () => {
             <label className="block text-[11px] uppercase tracking-widest font-mono text-text-custom mb-2 font-bold">
               Password * (min 8 chars)
             </label>
-            <input
+            <Input
+              id="password"
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              {...formRegister('password')}
               placeholder="••••••••"
-              required
-              minLength={8}
               className="w-full bg-[#fcfcfc] border border-border-custom p-3.5 text-text-custom font-sans focus:outline-none focus:border-text-custom focus:bg-white transition-all text-sm"
             />
+            {errors.password && (
+              <p className="text-danger text-[11px] font-mono mt-1">{errors.password.message}</p>
+            )}
           </div>
 
           {/* Bio */}
@@ -141,22 +130,22 @@ export const Register: React.FC = () => {
               Short Chef Bio (Optional)
             </label>
             <textarea
+              id="bio"
               rows={2}
-              value={bio}
-              onChange={(e) => setBio(e.target.value)}
+              {...formRegister('bio')}
               placeholder="Tell readers slightly about yourself or your favorite recipes..."
               className="w-full bg-[#fcfcfc] border border-border-custom p-3.5 text-text-custom font-sans focus:outline-none focus:border-text-custom focus:bg-white transition-all text-sm"
             />
           </div>
 
           {/* Submit */}
-          <button
+          <Button
             type="submit"
-            disabled={submitting}
-            className="btn-primary w-full border border-text-custom bg-text-custom hover:bg-white hover:text-text-custom text-white py-3.5 font-mono text-xs uppercase tracking-widest font-bold transition-all cursor-pointer disabled:opacity-50 disabled:cursor-wait shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)] hover:shadow-none translate-y-0 hover:translate-y-1"
+            disabled={isSubmitting}
+            className="w-full border border-text-custom bg-text-custom hover:bg-white hover:text-text-custom text-white py-3.5 font-mono text-xs uppercase tracking-widest font-bold transition-all cursor-pointer disabled:opacity-50 disabled:cursor-wait shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)] hover:shadow-none translate-y-0 hover:translate-y-1"
           >
-            {submitting ? 'Creating account...' : 'Create account'}
-          </button>
+            {isSubmitting ? 'Creating account...' : 'Create account'}
+          </Button>
         </form>
 
         <div className="border-t border-border-custom pt-5 text-center">

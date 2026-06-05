@@ -3,12 +3,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Plus, X } from 'lucide-react';
   import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useDropzone } from 'react-dropzone';
 import { Recipe, Ingredient } from '../types';
 
 import { Button } from './ui/button';
@@ -39,7 +40,7 @@ const recipeFormSchema = z.object({
   difficulty: z.enum(['Easy', 'Medium', 'Hard']),
   time: z.coerce.number().int().positive('Cook time must be a positive number'),
   servings: z.coerce.number().int().positive('Servings must be a positive number'),
-  imageUrl: z.union([z.string().url('Invalid URL'), z.literal('')]).optional(),
+  imageUrl: z.string().optional(),
   tags: z.string(),
   ingredients: z
     .array(
@@ -75,6 +76,8 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
   const navigate = useNavigate();
 
   const [topError, setTopError] = React.useState<string | null>(null);
+  const [dropError, setDropError] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const form = useForm<RecipeFormValues>({
     resolver: zodResolver(recipeFormSchema),
@@ -90,6 +93,39 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
       ingredients: [{ name: '', amount: 1, unit: 'units' }],
       steps: [''],
     },
+  });
+
+  // ── Dropzone ────────────────────────────────────────────
+  const onDrop = useCallback((acceptedFiles: File[], rejectedFiles: any[]) => {
+    setDropError(null);
+    if (rejectedFiles.length > 0) {
+      const err = rejectedFiles[0].errors[0];
+      if (err?.code === 'file-too-large') setDropError('Image must be under 5MB');
+      else if (err?.code === 'file-invalid-type') setDropError('Only image files (PNG, JPG, WebP) are accepted');
+      else setDropError('Invalid file');
+      return;
+    }
+    const file = acceptedFiles[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result as string;
+      setPreviewUrl(dataUrl);
+      form.setValue('imageUrl', dataUrl, { shouldValidate: false });
+    };
+    reader.readAsDataURL(file);
+  }, [form]);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: { 'image/*': ['.png', '.jpg', '.jpeg', '.webp'] },
+    maxSize: 5 * 1024 * 1024, // 5MB
+    maxFiles: 1,
+    disabled: isSubmitting,
+    multiple: undefined,
+    onDragEnter: undefined,
+    onDragOver: undefined,
+    onDragLeave: undefined,
   });
 
   // Pre-fill when editing
@@ -113,6 +149,9 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
             ? initialData.steps
             : [''],
       });
+      if (initialData.imageUrl) {
+        setPreviewUrl(initialData.imageUrl);
+      }
     }
   }, [initialData, form]);
 
@@ -357,43 +396,50 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
               />
             </div>
 
-            {/* Image URL */}
-            <FormField
-              control={form.control}
-              name="imageUrl"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="block text-xs uppercase tracking-wider font-mono text-text-muted mb-2 font-bold">
-                    Header Image URL (Optional)
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      type="url"
-                      placeholder="https://images.unsplash.com/photo-..."
-                      className="w-full bg-[#fcfcfc] border-border-custom h-auto py-3 px-3 text-text-custom font-sans focus:outline-none focus:border-text-custom focus:bg-white transition-all text-sm rounded-none mb-3"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-xs text-danger font-mono mt-1.5" />
-                  {field.value && (
-                    <div className="border border-border-custom p-2 bg-[#fcfcfc]">
-                      <p className="text-[11px] font-mono text-text-muted mb-1.5">
-                        LIVE URL PREVIEW:
-                      </p>
-                      <img
-                        src={field.value}
-                        alt="Live custom preview"
-                        referrerPolicy="no-referrer"
-                        className="max-h-44 object-cover w-full opacity-90"
-                        onError={(e) => {
-                          (e.target as HTMLElement).style.display = 'none';
-                        }}
-                      />
-                    </div>
-                  )}
-                </FormItem>
+            {/* Header Image Dropzone */}
+            <div>
+              <label className="block text-xs uppercase tracking-wider font-mono text-text-muted mb-2 font-bold">
+                Header Image (Optional)
+              </label>
+
+              {!(previewUrl || form.getValues('imageUrl')) ? (
+                <div
+                  {...getRootProps()}
+                  className={`border-2 border-dashed border-border-custom bg-[#fcfcfc] p-8 text-center cursor-pointer transition-all ${
+                    isDragActive ? 'border-text-custom bg-neutral-50' : 'hover:border-text-custom'
+                  }`}
+                >
+                  <input {...getInputProps()} />
+                  <p className="text-sm text-text-muted font-sans">
+                    Drag and drop an image here, or click to browse
+                  </p>
+                  <p className="text-xs text-text-muted font-mono mt-1">
+                    PNG, JPG, or WebP — max 5MB
+                  </p>
+                </div>
+              ) : (
+                <div className="border border-border-custom p-2 bg-[#fcfcfc] relative">
+                  <img
+                    src={previewUrl || form.getValues('imageUrl') || ''}
+                    alt="Recipe preview"
+                    className="max-h-44 object-cover w-full"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPreviewUrl(null);
+                      form.setValue('imageUrl', '', { shouldValidate: false });
+                    }}
+                    className="absolute top-2 right-2 bg-white border border-border-custom p-1 text-xs font-mono text-danger hover:bg-red-50"
+                  >
+                    Remove
+                  </button>
+                </div>
               )}
-            />
+              {dropError && (
+                <p className="text-xs text-danger font-mono mt-1.5">{dropError}</p>
+              )}
+            </div>
 
             {/* Tags */}
             <FormField

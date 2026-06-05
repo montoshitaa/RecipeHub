@@ -1,4 +1,3 @@
-// @ts-nocheck — Phase 1 stub; re-implemented with axios in Phase 2
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -7,7 +6,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Clock, Utensils, ArrowLeft, ArrowRight } from 'lucide-react';
-import { apiFetch } from '../api/client';
+import { api } from '../api/client';
+import { getRecipe, getComments } from '../api/recipes';
 import { Recipe, Comment } from '../types';
 import { useAuth } from '../context/AuthContext';
 import { StarRating } from '../components/StarRating';
@@ -47,10 +47,10 @@ export const RecipeDetail: React.FC = () => {
   const fetchData = async () => {
     if (!id) return;
     try {
-      const recipeData = await apiFetch(`/api/recipes/${id}`);
+      const recipeData = await getRecipe(id);
       setRecipe(recipeData);
 
-      const commentsData = await apiFetch(`/api/recipes/${id}/comments`);
+      const commentsData = await getComments(id);
       setComments(commentsData || []);
     } catch (err: any) {
       console.error("Failed to load recipe details", err);
@@ -78,12 +78,9 @@ export const RecipeDetail: React.FC = () => {
     setCommentError(null);
 
     try {
-      await apiFetch(`/api/recipes/${id}/comments`, {
-        method: "POST",
-        body: JSON.stringify({
-          content: newCommentText.trim(),
-          rating: newCommentRating,
-        }),
+      await api.post(`/api/recipes/${id}/comments`, {
+        content: newCommentText.trim(),
+        rating: newCommentRating,
       });
 
       // Reset box
@@ -91,7 +88,7 @@ export const RecipeDetail: React.FC = () => {
       setNewCommentRating(5);
       
       // Refetch comments to maintain accurate state without manual insertions as requested
-      const freshComments = await apiFetch(`/api/recipes/${id}/comments`);
+      const freshComments = await getComments(id);
       setComments(freshComments || []);
     } catch (err: any) {
       setCommentError(err?.message || 'Failed to submit comment. Please try again.');
@@ -107,10 +104,10 @@ export const RecipeDetail: React.FC = () => {
     if (!confirmed) return;
 
     try {
-      await apiFetch(`/api/comments/${commentId}`, { method: "DELETE" });
+      await api.delete(`/api/comments/${commentId}`);
       // Refetch
       if (id) {
-        const freshComments = await apiFetch(`/api/recipes/${id}/comments`);
+        const freshComments = await getComments(id);
         setComments(freshComments || []);
       }
     } catch (err: any) {
@@ -123,7 +120,7 @@ export const RecipeDetail: React.FC = () => {
     if (!id || !recipe || !token) return;
     setDeletingRecipe(true);
     try {
-      await apiFetch(`/api/recipes/${id}`, { method: "DELETE" });
+      await api.delete(`/api/recipes/${id}`);
       navigate('/');
     } catch (err: any) {
       alert(err?.message || "Error deleting recipe.");

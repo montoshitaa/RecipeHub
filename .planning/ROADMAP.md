@@ -55,11 +55,14 @@ Plans:
 **Plans**: 3 plans
 **UI hint**: yes
 
-Plans:
+**Wave 1**
 
-- [ ] 02-01: Recipe feed — card grid with responsive layout, difficulty badges, loading skeletons
-- [ ] 02-02: Filtering & search — category/difficulty selects, debounced search, URL query param sync
-- [ ] 02-03: Recipe detail & comments — hero image, ingredient checklist, steps, comment list, post/delete comments
+- [ ] 02-01-PLAN.md — Recipe feed: adapt Home.tsx + RecipeCard.tsx to real API, shadcn Badge (difficulty colors), shadcn Skeleton loading
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [ ] 02-02-PLAN.md — Filtering & search: shadcn Select dropdowns, 300ms debounced search, useSearchParams URL sync
+- [ ] 02-03-PLAN.md — Recipe detail & comments: adapt RecipeDetail.tsx to real API, ingredient checklist (shadcn Checkbox), shadcn Textarea, comments CRUD with sonner toasts
 
 ### Phase 3: Recipe Management
 

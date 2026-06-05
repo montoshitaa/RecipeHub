@@ -1,4 +1,3 @@
-// @ts-nocheck — Phase 1 stub; re-implemented with axios in Phase 2
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -6,8 +5,9 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import { RecipeForm } from '../components/RecipeForm';
-import { apiFetch } from '../api/client';
+import { createRecipe } from '../api/recipes';
 import { Recipe } from '../types';
 
 export const CreateRecipe: React.FC = () => {
@@ -17,20 +17,13 @@ export const CreateRecipe: React.FC = () => {
   const handleFormSubmit = async (formData: Omit<Recipe, '_id' | 'authorId' | 'createdAt'>) => {
     setIsSubmitting(true);
     try {
-      const response = await apiFetch('/api/recipes', {
-        method: 'POST',
-        body: JSON.stringify(formData),
-      });
-
-      // Redirect to the newly created recipe detail page
-      if (response && response._id) {
-        navigate(`/recipes/${response._id}`);
-      } else {
-        navigate('/');
-      }
+      const response = await createRecipe(formData);
+      toast.success('Recipe published!');
+      navigate('/recipes/' + response._id);
     } catch (err: any) {
-      console.error('Failed to create recipe:', err);
-      throw err; // bubble error up to the Form so it renders on top
+      const message = err?.response?.data?.message || 'Failed to create recipe';
+      toast.error(message);
+      throw err; // bubble error up to the Form so it renders top error banner
     } finally {
       setIsSubmitting(false);
     }

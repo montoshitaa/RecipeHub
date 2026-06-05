@@ -21,6 +21,7 @@ import { Register } from './pages/Register';
 import { NotFound } from './pages/NotFound';
 import { Home } from './pages/Home';
 import { RecipeDetail } from './pages/RecipeDetail';
+import { CreateRecipe } from './pages/CreateRecipe';
 
 export default function App() {
   return (
@@ -41,6 +42,9 @@ export default function App() {
                 <Route path="/recipes/:id" element={<RecipeDetail />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+
+                {/* Protected Routes */}
+                <Route path="/create" element={<ProtectedRoute><CreateRecipe /></ProtectedRoute>} />
 
                 {/* 404 Catch All */}
                 <Route path="*" element={<NotFound />} />

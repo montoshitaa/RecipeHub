@@ -19,6 +19,7 @@ import { Toaster } from 'sonner';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { NotFound } from './pages/NotFound';
+import { Home } from './pages/Home';
 
 export default function App() {
   return (
@@ -35,7 +36,7 @@ export default function App() {
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
               <Routes>
                 {/* Public Routes */}
-                <Route path="/" element={<div className="min-h-[60vh] flex items-center justify-center"><p className="font-mono text-text-muted">Recipe feed coming in Phase 2</p></div>} />
+                <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
 

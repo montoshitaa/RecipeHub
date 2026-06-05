@@ -1,4 +1,3 @@
-// @ts-nocheck — Phase 1 stub; re-implemented with axios in Phase 2
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -8,8 +7,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Clock, Utensils, ArrowRight } from 'lucide-react';
 import { Recipe, Comment } from '../types';
-// @ts-nocheck — Phase 1 stub; re-implemented with axios in Phase 2
-import { apiFetch } from '../api/client';
+import { api } from '../api/client';
+import { Badge } from '@/components/ui/badge';
 import { StarRating } from './StarRating';
 
 interface RecipeCardProps {
@@ -35,7 +34,8 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
     let mounted = true;
     const fetchComments = async () => {
       try {
-        const comments: Comment[] = await apiFetch(`/api/recipes/${recipe._id}/comments`);
+        const res = await api.get(`/api/recipes/${recipe._id}/comments`);
+        const comments: Comment[] = res.data;
         if (mounted) {
           if (comments && comments.length > 0) {
             const sum = comments.reduce((acc, c) => acc + c.rating, 0);
@@ -80,6 +80,20 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
   };
 
   const firstLetter = recipe.title ? recipe.title.charAt(0).toUpperCase() : 'R';
+
+  const difficultyBadgeClass = (() => {
+    const base = 'font-mono text-[11px] uppercase tracking-wider font-bold px-2.5 py-0.5';
+    switch (recipe.difficulty) {
+      case 'Easy':
+        return `bg-[#27ae60] text-white ${base}`;
+      case 'Medium':
+        return `bg-star text-white ${base}`;
+      case 'Hard':
+        return `bg-accent text-white ${base}`;
+      default:
+        return `bg-border-custom text-text-muted ${base}`;
+    }
+  })();
 
   return (
     <div
@@ -136,7 +150,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
           {/* Metadata row */}
           <div className="flex items-center justify-between text-[11px] font-mono tracking-wider uppercase text-text-muted mb-2">
             <span>{recipe.category}</span>
-            <span>{recipe.difficulty}</span>
+            <Badge className={difficultyBadgeClass}>{recipe.difficulty}</Badge>
           </div>
 
           {/* Title */}

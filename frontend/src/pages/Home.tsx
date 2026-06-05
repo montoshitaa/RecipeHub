@@ -10,6 +10,7 @@ import { getRecipes } from '../api/recipes';
 import { Recipe } from '../types';
 import { RecipeCard } from '../components/RecipeCard';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const VALID_CATEGORIES = ['Breakfast', 'Lunch', 'Dinner', 'Dessert', 'Snack', 'Other'];
 const VALID_DIFFICULTIES = ['Easy', 'Medium', 'Hard'];
@@ -148,26 +149,20 @@ export const Home: React.FC = () => {
           <label className="block text-[11px] font-mono uppercase tracking-widest text-text-custom mb-2 font-bold">
             Category
           </label>
-          <div className="relative">
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="w-full h-[46px] bg-[#fcfcfc] border border-border-custom px-4 text-text-custom font-sans focus:outline-none focus:border-text-custom focus:bg-white text-sm cursor-pointer appearance-none transition-all"
-            >
-              <option value="All">All Categories</option>
-              <option value="Breakfast">Breakfast</option>
-              <option value="Lunch">Lunch</option>
-              <option value="Dinner">Dinner</option>
-              <option value="Dessert">Dessert</option>
-              <option value="Snack">Snack</option>
-              <option value="Other">Other</option>
-            </select>
-            <div className="absolute right-4 top-[50%] -translate-y-[50%] pointer-events-none text-text-muted/60">
-              <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square"/>
-              </svg>
-            </div>
-          </div>
+          <Select value={category} onValueChange={setCategory}>
+            <SelectTrigger className="w-full h-[46px] bg-[#fcfcfc] border border-border-custom text-text-custom font-sans focus:outline-none focus:border-text-custom focus:bg-white text-sm transition-all rounded-none">
+              <SelectValue placeholder="All Categories" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="All">All Categories</SelectItem>
+              <SelectItem value="Breakfast">Breakfast</SelectItem>
+              <SelectItem value="Lunch">Lunch</SelectItem>
+              <SelectItem value="Dinner">Dinner</SelectItem>
+              <SelectItem value="Dessert">Dessert</SelectItem>
+              <SelectItem value="Snack">Snack</SelectItem>
+              <SelectItem value="Other">Other</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Difficulty Dropdown */}
@@ -175,23 +170,17 @@ export const Home: React.FC = () => {
           <label className="block text-[11px] font-mono uppercase tracking-widest text-text-custom mb-2 font-bold">
             Difficulty
           </label>
-          <div className="relative">
-            <select
-              value={difficulty}
-              onChange={(e) => setDifficulty(e.target.value)}
-              className="w-full h-[46px] bg-[#fcfcfc] border border-border-custom px-4 text-text-custom font-sans focus:outline-none focus:border-text-custom focus:bg-white text-sm cursor-pointer appearance-none transition-all"
-            >
-              <option value="All">All Difficulties</option>
-              <option value="Easy">Easy</option>
-              <option value="Medium">Medium</option>
-              <option value="Hard">Hard</option>
-            </select>
-            <div className="absolute right-4 top-[50%] -translate-y-[50%] pointer-events-none text-text-muted/60">
-              <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square"/>
-              </svg>
-            </div>
-          </div>
+          <Select value={difficulty} onValueChange={setDifficulty}>
+            <SelectTrigger className="w-full h-[46px] bg-[#fcfcfc] border border-border-custom text-text-custom font-sans focus:outline-none focus:border-text-custom focus:bg-white text-sm transition-all rounded-none">
+              <SelectValue placeholder="All Difficulties" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="All">All Difficulties</SelectItem>
+              <SelectItem value="Easy">Easy</SelectItem>
+              <SelectItem value="Medium">Medium</SelectItem>
+              <SelectItem value="Hard">Hard</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
 

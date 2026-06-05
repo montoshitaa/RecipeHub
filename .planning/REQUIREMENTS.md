@@ -88,40 +88,40 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | — | Pending |
-| AUTH-02 | — | Pending |
-| AUTH-03 | — | Pending |
-| AUTH-04 | — | Pending |
-| BROWSE-01 | — | Pending |
-| BROWSE-02 | — | Pending |
-| BROWSE-03 | — | Pending |
-| BROWSE-04 | — | Pending |
-| RECIPE-01 | — | Pending |
-| RECIPE-02 | — | Pending |
-| RECIPE-03 | — | Pending |
-| RECIPE-04 | — | Pending |
-| RECIPE-05 | — | Pending |
-| RECIPE-06 | — | Pending |
-| SOCIAL-01 | — | Pending |
-| SOCIAL-02 | — | Pending |
-| SOCIAL-03 | — | Pending |
-| UX-01 | — | Pending |
-| UX-02 | — | Pending |
-| UX-03 | — | Pending |
-| UX-04 | — | Pending |
-| UX-05 | — | Pending |
-| UX-06 | — | Pending |
-| UX-07 | — | Pending |
-| SETUP-01 | — | Pending |
-| SETUP-02 | — | Pending |
-| SETUP-03 | — | Pending |
-| SETUP-04 | — | Pending |
+| AUTH-01 | Phase 1 — Foundation & Authentication | Pending |
+| AUTH-02 | Phase 1 — Foundation & Authentication | Pending |
+| AUTH-03 | Phase 1 — Foundation & Authentication | Pending |
+| AUTH-04 | Phase 1 — Foundation & Authentication | Pending |
+| BROWSE-01 | Phase 2 — Browse & Discover | Pending |
+| BROWSE-02 | Phase 2 — Browse & Discover | Pending |
+| BROWSE-03 | Phase 2 — Browse & Discover | Pending |
+| BROWSE-04 | Phase 2 — Browse & Discover | Pending |
+| RECIPE-01 | Phase 3 — Recipe Management | Pending |
+| RECIPE-02 | Phase 3 — Recipe Management | Pending |
+| RECIPE-03 | Phase 3 — Recipe Management | Pending |
+| RECIPE-04 | Phase 3 — Recipe Management | Pending |
+| RECIPE-05 | Phase 3 — Recipe Management | Pending |
+| RECIPE-06 | Phase 3 — Recipe Management | Pending |
+| SOCIAL-01 | Phase 2 — Browse & Discover | Pending |
+| SOCIAL-02 | Phase 2 — Browse & Discover | Pending |
+| SOCIAL-03 | Phase 2 — Browse & Discover | Pending |
+| UX-01 | Phase 4 — Polish & UX | Pending |
+| UX-02 | Phase 4 — Polish & UX | Pending |
+| UX-03 | Phase 3 — Recipe Management | Pending |
+| UX-04 | Phase 4 — Polish & UX | Pending |
+| UX-05 | Phase 1 — Foundation & Authentication | Pending |
+| UX-06 | Phase 2 — Browse & Discover | Pending |
+| UX-07 | Phase 2 — Browse & Discover | Pending |
+| SETUP-01 | Phase 1 — Foundation & Authentication | Pending |
+| SETUP-02 | Phase 1 — Foundation & Authentication | Pending |
+| SETUP-03 | Phase 1 — Foundation & Authentication | Pending |
+| SETUP-04 | Phase 1 — Foundation & Authentication | Pending |
 
 **Coverage:**
 - v1 requirements: 28 total
-- Mapped to phases: 0
-- Unmapped: 28 ⚠️
+- Mapped to phases: 28
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-06-04*
-*Last updated: 2026-06-04 after initial definition*
+*Last updated: 2026-06-05 — Traceability updated after roadmap creation*

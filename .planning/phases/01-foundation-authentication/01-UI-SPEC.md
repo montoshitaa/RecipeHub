@@ -28,6 +28,12 @@ created: 2026-06-05
 **Source:** `frontend-to-implement/src/index.css` @theme block and font imports. RESEARCH.md confirms lucide-react.
 **shadcn note:** `components.json` does not exist yet. shadcn will be initialized during plan 01-01 (scaffold adaptation). The init process must preserve the scaffold's existing `@theme` block, font imports, and CSS custom properties. After init, remove the global `* { border-radius: 0px !important; box-shadow: none !important; }` rule — shadcn components require their built-in border-radius and shadow tokens to render correctly. The editorial aesthetic is maintained through typography, color, and spacing, not through universal border-radius/shadow suppression.
 
+### Visual Hierarchy
+
+**Auth screens (login/register):** The brand name "RecipeHub" in 24px serif semibold at the top-center of the form card is the primary focal point — it anchors the page and establishes the editorial tone. The form itself is contained in a bordered white card (max-width 400px, centered) that floats on the warm off-white background. The eye moves: brand → heading → first form field label (11px mono uppercase) → input → CTA button (dark bg, white text, slight shadow offset). Error messages interrupt this flow with a red-bordered alert container above the form fields.
+
+**404 page:** The oversized "404" numeral (60px+ serif bold) dominates the viewport center. The rotated SearchX icon in a square container above it provides a secondary anchor. The "Return to Feed" CTA is the tertiary focal point at the bottom of the card.
+
 ---
 
 ## Spacing Scale
@@ -56,14 +62,14 @@ Exceptions: none — standard Tailwind 4px scale used throughout.
 |------|------|--------|-------------|
 | Body | 15px (text-[15px] / sm:text-base) | 400 (regular) | 1.6 |
 | Label | 11px (text-[11px]) | 600 (semibold) | 1.3 |
-| Heading | 24px (text-2xl) | 700 (bold) | 1.2 |
+| Heading | 24px (text-2xl) | 600 (semibold) | 1.2 |
 
 **Font families by role:**
 - Body: `IBM Plex Sans` (--font-sans) — paragraph text, input values, links, helper text
 - Label: `IBM Plex Mono` (--font-mono) — form field labels, buttons, nav items, error headings, all in `uppercase tracking-widest`
 - Heading: `IBM Plex Serif` (--font-serif) — page titles, brand name, auth page headings, with `tracking-tight`
 
-**Source:** `frontend-to-implement/src/index.css` body rule (15px, 1.6 line-height). Auth pages (Login.tsx, Register.tsx) use text-[11px] font-mono for labels and font-serif text-2xl for headings. Google Fonts import loads weights 400, 500, 600, 700 for all three families — 400 and 600 are the declared contract weights; 500 and 700 may be used sparingly but are outside the contract.
+**Source:** `frontend-to-implement/src/index.css` body rule (15px, 1.6 line-height). Auth pages (Login.tsx, Register.tsx) use text-[11px] font-mono for labels and font-serif text-2xl for headings. Google Fonts import loads weights 400, 500, 600, 700 for all three families — the contract uses 400 (regular) and 600 (semibold) exclusively.
 
 ---
 
@@ -102,8 +108,8 @@ Exceptions: none — standard Tailwind 4px scale used throughout.
 | Primary CTA (register) | **Create account** — button text on `/register` form. Loading state: "Creating account..." while submitting. |
 | Login heading | "Sign in to your account" — h2 below brand name |
 | Register heading | "Create your account" — h2 below brand name |
-| Login link | "Don't have an account?" → **REGISTER** — link with ArrowRight icon to /register |
-| Register link | "Already have an account?" → **SIGN IN** — link with ArrowRight icon to /login |
+| Login link | "Don't have an account?" → **Create account** — link with ArrowRight icon to /register |
+| Register link | "Already have an account?" → **Sign in** — link with ArrowRight icon to /login |
 | Auth error heading (login) | "AUTH EXCEPTION" — mono uppercase label in error container |
 | Auth error heading (register) | "REGISTRATION EXCEPTION" — mono uppercase label in error container |
 | Error state (login) | Server returns: "Invalid email or password." — display verbatim. Do NOT differentiate "email not found" vs "wrong password" (prevents enumeration). |

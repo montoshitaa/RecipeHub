@@ -1,12 +1,14 @@
-// @ts-nocheck — Phase 1 stub; re-implemented with axios in Phase 2
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { apiFetch } from '../api/client';
+import React, { useState, useEffect } from 'react';
+import { Search } from 'lucide-react';
+import { getRecipes } from '../api/recipes';
 import { Recipe } from '../types';
 import { RecipeCard } from '../components/RecipeCard';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export const Home: React.FC = () => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -22,22 +24,11 @@ export const Home: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      // API call with params for category and difficulty
-      let path = '/api/recipes';
-      const params = new URLSearchParams();
-      if (category !== 'All') params.append('category', category);
-      if (difficulty !== 'All') params.append('difficulty', difficulty);
-      
-      const queryString = params.toString();
-      if (queryString) {
-        path += `?${queryString}`;
-      }
-
-      const data = await apiFetch(path, { method: "GET" });
-      setRecipes(data || []);
+      const data = await getRecipes({ category, difficulty });
+      setRecipes(data);
     } catch (err: any) {
       console.error("Home feed fetch error: ", err);
-      setError("Unable to retrieve catalog. Please verify your connection or use Offline sandbox Mode.");
+      setError(err?.response?.data?.message || "Unable to retrieve catalog. Please verify your connection.");
     } finally {
       setLoading(false);
     }
@@ -165,15 +156,15 @@ export const Home: React.FC = () => {
         /* Loading Skeleton states as requested: "skeleton grid (3 gray placeholder cards)" */
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {[1, 2, 3].map((num) => (
-            <div key={num} className="border border-border-custom bg-surface animate-pulse" id={`skeleton-card-${num}`}>
-              <div className="w-full aspect-[16/9] bg-neutral-200 border-b border-border-custom"></div>
+            <div key={num} className="border border-border-custom bg-surface" id={`skeleton-card-${num}`}>
+              <Skeleton className="w-full aspect-[16/9] border-b border-border-custom" />
               <div className="p-4 space-y-3">
-                <div className="h-3 w-1/3 bg-neutral-200 font-mono"></div>
-                <div className="h-5 w-4/5 bg-neutral-200"></div>
-                <div className="h-3 w-1/2 bg-neutral-200"></div>
+                <Skeleton className="h-3 w-1/3" />
+                <Skeleton className="h-5 w-4/5" />
+                <Skeleton className="h-3 w-1/2" />
                 <div className="border-t border-border-custom pt-3 flex justify-between">
-                  <div className="h-3 w-1/4 bg-neutral-200"></div>
-                  <div className="h-3 w-1/5 bg-neutral-200"></div>
+                  <Skeleton className="h-3 w-1/4" />
+                  <Skeleton className="h-3 w-1/5" />
                 </div>
               </div>
             </div>

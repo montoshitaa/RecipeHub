@@ -1,0 +1,6 @@
+{
+  "name": "RecipeHub",
+  "description": "A collaborative cooking recipe platform with sharp-edged typography and a clean, high-contrast, editorial design style.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

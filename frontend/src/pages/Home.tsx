@@ -5,20 +5,69 @@
 
 import React, { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 import { getRecipes } from '../api/recipes';
 import { Recipe } from '../types';
 import { RecipeCard } from '../components/RecipeCard';
 import { Skeleton } from '@/components/ui/skeleton';
 
+const VALID_CATEGORIES = ['Breakfast', 'Lunch', 'Dinner', 'Dessert', 'Snack', 'Other'];
+const VALID_DIFFICULTIES = ['Easy', 'Medium', 'Hard'];
+
 export const Home: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Initialize from URL params (with validation per threat model T-02-06)
+  const initialSearch = searchParams.get('q') || '';
+  const getInitialCategory = (): string => {
+    const c = searchParams.get('category');
+    return c && VALID_CATEGORIES.includes(c) ? c : 'All';
+  };
+  const getInitialDifficulty = (): string => {
+    const d = searchParams.get('difficulty');
+    return d && VALID_DIFFICULTIES.includes(d) ? d : 'All';
+  };
+
   // Filters State
-  const [search, setSearch] = useState('');
-  const [category, setCategory] = useState('All');
-  const [difficulty, setDifficulty] = useState('All');
+  const [search, setSearch] = useState(initialSearch);
+  const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
+  const [category, setCategory] = useState(getInitialCategory());
+  const [difficulty, setDifficulty] = useState(getInitialDifficulty());
+
+  // 300ms debounce on search input (BROWSE-03)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  // Sync filters to URL query params (deep-linkable, shareable)
+  useEffect(() => {
+    setSearchParams((prev) => {
+      const params = new URLSearchParams(prev);
+      if (debouncedSearch.trim()) {
+        params.set('q', debouncedSearch.trim());
+      } else {
+        params.delete('q');
+      }
+      if (category !== 'All') {
+        params.set('category', category);
+      } else {
+        params.delete('category');
+      }
+      if (difficulty !== 'All') {
+        params.set('difficulty', difficulty);
+      } else {
+        params.delete('difficulty');
+      }
+      return params;
+    }, { replace: true });
+  }, [debouncedSearch, category, difficulty, setSearchParams]);
 
   const fetchRecipes = async () => {
     setLoading(true);
@@ -39,10 +88,10 @@ export const Home: React.FC = () => {
     fetchRecipes();
   }, [category, difficulty]);
 
-  // Client-side text search (title or tags)
+  // Client-side text search (title or tags) — uses debouncedSearch
   const filteredRecipes = recipes.filter((recipe) => {
-    if (!search.trim()) return true;
-    const query = search.toLowerCase().trim();
+    if (!debouncedSearch.trim()) return true;
+    const query = debouncedSearch.toLowerCase().trim();
     const matchesTitle = recipe.title.toLowerCase().includes(query);
     const matchesTags = recipe.tags?.some((t) => t.toLowerCase().includes(query)) || false;
     return matchesTitle || matchesTags;
@@ -50,8 +99,10 @@ export const Home: React.FC = () => {
 
   const handleClearFilters = () => {
     setSearch('');
+    setDebouncedSearch('');
     setCategory('All');
     setDifficulty('All');
+    setSearchParams({}, { replace: true });
   };
 
   return (

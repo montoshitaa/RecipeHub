@@ -3,33 +3,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { getApiMode, setApiMode } from '../api/client';
 
 export const Header: React.FC = () => {
   const { token, logout, user } = useAuth();
   const navigate = useNavigate();
-  const [apiMode, setApiModeState] = useState<'real' | 'fallback'>(getApiMode());
-
-  // Listen to external api mode changes to keep UI fully in sync
-  useEffect(() => {
-    const handleModeChange = () => {
-      setApiModeState(getApiMode());
-    };
-    window.addEventListener("recipehub_api_mode_change", handleModeChange);
-    return () => {
-      window.removeEventListener("recipehub_api_mode_change", handleModeChange);
-    };
-  }, []);
-
-  const handleApiToggle = () => {
-    const target = apiMode === 'real' ? 'fallback' : 'real';
-    setApiMode(target);
-    // Reload page to rehydrate with relevant database mode
-    window.location.reload();
-  };
 
   const handleSignOut = () => {
     logout();
@@ -41,22 +21,6 @@ export const Header: React.FC = () => {
 
   return (
     <header className="border-b border-border-custom bg-surface w-full z-50">
-      {/* Top Banner indicating current API connection status - Minimal and responsive */}
-      <div className="bg-[#1a1a1a] text-white text-[10px] sm:text-[11px] font-mono px-4 py-2.5 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left select-none">
-        <div className="flex items-center justify-center gap-2 flex-wrap">
-          <span className={`inline-block w-1.5 h-1.5 rounded-none ${apiMode === 'real' ? 'bg-[#27ae60]' : 'bg-[#f39c12]'}`}></span>
-          <span className="opacity-90">
-            API SERVER: {apiMode === 'real' ? 'api.yourdomain.xyz' : 'LOCAL OFFLINE SANDBOX (ACTIVE)'}
-          </span>
-        </div>
-        <button
-          onClick={handleApiToggle}
-          className="text-white hover:text-white/80 font-bold uppercase underline decoration-white/40 hover:decoration-white underline-offset-4 cursor-pointer text-[9px] sm:text-[10px] tracking-wider shrink-0 transition-all"
-        >
-          {apiMode === 'real' ? 'Switch to Sandbox' : 'Connect to Live API'}
-        </button>
-      </div>
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 sm:py-0 sm:h-18 flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
         {/* Brand Logo */}
         <Link to="/" className="font-serif text-2xl font-bold tracking-tight text-text-custom hover:text-accent transition-colors">

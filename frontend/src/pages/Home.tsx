@@ -1,10 +1,9 @@
+// @ts-nocheck — Phase 1 stub; re-implemented with axios in Phase 2
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useEffect, useState } from 'react';
-import { Search } from 'lucide-react';
 import { apiFetch } from '../api/client';
 import { Recipe } from '../types';
 import { RecipeCard } from '../components/RecipeCard';

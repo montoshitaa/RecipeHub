@@ -1,20 +1,31 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# RecipeHub Frontend
 
-# Run and deploy your AI Studio app
+## Prerequisites
+- Node.js 24+
+- Backend running on port 4000
 
-This contains everything you need to run your app locally.
+## Getting Started
 
-View your app in AI Studio: https://ai.studio/apps/31ef27e5-f6d7-41c3-ada3-e0266694cf6c
+1. Start the backend (from repo root):
+   ```
+   cd backend && npm install && npm run dev
+   ```
+   Backend runs on http://localhost:4000
 
-## Run Locally
+2. Start the frontend (from repo root):
+   ```
+   cd frontend && npm install && npm run dev
+   ```
+   Frontend runs on http://localhost:3000
 
-**Prerequisites:**  Node.js
+3. Open http://localhost:3000 in your browser.
 
+## Available Scripts
+- `npm run dev` — Start Vite dev server on port 3000
+- `npm run build` — Production build to dist/
+- `npm run preview` — Preview production build locally
+- `npm run lint` — TypeScript type checking (tsc --noEmit)
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## Architecture
+The Vite dev server proxies `/api/*` requests to `http://localhost:4000`.
+Authentication uses JWT Bearer tokens stored in localStorage.

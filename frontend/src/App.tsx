@@ -13,17 +13,12 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Header } from './components/Header';
+import { Toaster } from 'sonner';
 
-// Pages
-import { Home } from './pages/Home';
-import { RecipeDetail } from './pages/RecipeDetail';
-import { CreateRecipe } from './pages/CreateRecipe';
-import { EditRecipe } from './pages/EditRecipe';
-import { Profile } from './pages/Profile';
+// Pages (Phase 1 scope)
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { NotFound } from './pages/NotFound';
-import { Unauthorized } from './pages/Unauthorized';
 
 export default function App() {
   return (
@@ -34,41 +29,15 @@ export default function App() {
             {/* Nav Header */}
             <Header />
 
+            <Toaster />
+
             {/* Main Application Container */}
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
               <Routes>
                 {/* Public Routes */}
-                <Route path="/" element={<Home />} />
-                <Route path="/recipes/:id" element={<RecipeDetail />} />
+                <Route path="/" element={<div className="min-h-[60vh] flex items-center justify-center"><p className="font-mono text-text-muted">Recipe feed coming in Phase 2</p></div>} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/unauthorized" element={<Unauthorized />} />
-
-                {/* Protected Routes */}
-                <Route
-                  path="/new"
-                  element={
-                    <ProtectedRoute>
-                      <CreateRecipe />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/edit/:id"
-                  element={
-                    <ProtectedRoute>
-                      <EditRecipe />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/profile"
-                  element={
-                    <ProtectedRoute>
-                      <Profile />
-                    </ProtectedRoute>
-                  }
-                />
 
                 {/* 404 Catch All */}
                 <Route path="*" element={<NotFound />} />
@@ -81,11 +50,11 @@ export default function App() {
             <div className="absolute inset-0 opacity-[0.02] bg-[radial-gradient(#1a1a1a_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
             <div className="max-w-7xl mx-auto px-4 sm:px-8 flex flex-col md:flex-row items-center justify-between gap-4 relative z-10 text-center md:text-left">
               <div className="flex flex-col gap-1">
-                <p className="font-bold text-text-custom tracking-widest uppercase">© 2026 RECIPEHUB COOPERATIVE CORPORATION</p>
+                <p className="font-bold text-text-custom tracking-widest uppercase">&copy; 2026 RECIPEHUB COOPERATIVE CORPORATION</p>
                 <p className="text-[10px] uppercase opacity-80">ALL RIGHTS RESERVED IN ALL JURISDICTIONS.</p>
               </div>
               <div className="flex items-center gap-4 text-[10px] tracking-widest font-bold uppercase">
-                <span className="hover:text-text-custom cursor-pointer transition-colors border-b border-transparent hover:border-text-custom pb-0.5">TERMS: SHARP & FLAT</span>
+                <span className="hover:text-text-custom cursor-pointer transition-colors border-b border-transparent hover:border-text-custom pb-0.5">TERMS: SHARP &amp; FLAT</span>
                 <span className="text-border-custom">|</span>
                 <span className="opacity-70">SYSTEM VERSION: 1.0.0</span>
               </div>

@@ -1,3 +1,4 @@
+// @ts-nocheck — Phase 1 stub; re-implemented with axios in Phase 2
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0

@@ -5,7 +5,7 @@ milestone_name: milestone
 status: verifying
 stopped_at: Completed 04-polish-ux-02-PLAN.md
 last_updated: "2026-06-06T02:28:27.776Z"
-last_activity: 2026-06-06 -- Completed quick tasks 260605-suf (login/style/redirect), 260605-xqr (steps color/image/comments), and 260605-tdf (recipe author/profile fix)
+last_activity: 2026-06-06 -- Completed quick tasks 260605-tdf (recipe author/profile fix) and 260605-tgw (description on profile cards)
 progress:
   total_phases: 4
   completed_phases: 4
@@ -98,3 +98,4 @@ Resume file: None
 | 260605-suf | Fix login button style, / route redirect, auth feedback, recipes.filter error | 2026-06-06 | 6cc3edc | [260605-suf-fix-the-login-button-style-and-fix-the-d](./quick/260605-suf-fix-the-login-button-style-and-fix-the-d/) |
 | 260605-xqr | Fix steps number color, image size errors, comments.map crash | 2026-06-06 | fd90688 | |
 | 260605-tdf | Fix recipes not showing who created them and profile not showing user recipes | 2026-06-06 | 4e9f748 | [260605-tdf-fix-that-recipes-dont-show-who-created-i](./quick/260605-tdf-fix-that-recipes-dont-show-who-created-i/) |
+| 260605-tgw | Fix recipe description not showing on profile recipe cards | 2026-06-06 | d69c8cb | [260605-tgw-fix-that-recipe-description-is-not-showi](./quick/260605-tgw-fix-that-recipe-description-is-not-showi/) |

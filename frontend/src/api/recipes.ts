@@ -24,7 +24,11 @@ export const getRecipes = (
 };
 
 export const getRecipe = (id: string): Promise<Recipe> =>
-  api.get(`/api/recipes/${id}`).then((res) => res.data);
+  api.get(`/api/recipes/${id}`).then((res) => {
+    const data = res.data;
+    if (data?.recipe) return data.recipe;
+    return data;
+  });
 
 export const getComments = (recipeId: string): Promise<Comment[]> =>
   api.get(`/api/recipes/${recipeId}/comments`).then((res) => {

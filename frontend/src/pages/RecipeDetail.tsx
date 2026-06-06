@@ -41,10 +41,11 @@ export const RecipeDetail: React.FC = () => {
   const [checkedIngredients, setCheckedIngredients] = useState<Set<number>>(new Set());
 
   // Seed avatar fallback gradient
-  const getAvatarBgColor = (name: string) => {
+  const getAvatarBgColor = (name: string | undefined | null) => {
     const bgColors = ['bg-[#c0392b]', 'bg-[#2c3e50]', 'bg-[#16a085]', 'bg-[#d35400]', 'bg-[#27ae60]', 'bg-[#8e44ad]'];
+    const safeName = name || 'C';
     let sum = 0;
-    for (let i = 0; i < name.length; i++) sum += name.charCodeAt(i);
+    for (let i = 0; i < safeName.length; i++) sum += safeName.charCodeAt(i);
     return bgColors[sum % bgColors.length];
   };
 

@@ -14,6 +14,25 @@ function normalizeComment(raw: any): Comment {
   };
 }
 
+function normalizeRecipe(raw: any): Recipe {
+  return {
+    _id: raw._id || raw.id,
+    title: raw.title,
+    description: raw.description,
+    category: raw.category,
+    difficulty: raw.difficulty,
+    time: raw.time ?? raw.cookTimeMin,
+    servings: raw.servings,
+    imageUrl: raw.imageUrl || raw.image,
+    tags: raw.tags,
+    authorId: raw.authorId || raw.author?._id || raw.author?.id || '',
+    authorName: raw.authorName || raw.author?.name || raw.authorName,
+    createdAt: raw.createdAt,
+    ingredients: raw.ingredients,
+    steps: raw.steps,
+  };
+}
+
 export const getRecipes = (
   params?: { category?: string; difficulty?: string }
 ): Promise<Recipe[]> => {
@@ -30,17 +49,20 @@ export const getRecipes = (
   const path = query ? `/api/recipes?${query}` : '/api/recipes';
   return api.get(path).then((res) => {
     const data = res.data;
-    if (Array.isArray(data)) return data;
-    if (data?.recipes && Array.isArray(data.recipes)) return data.recipes;
-    return [];
+    const rawList: any[] = Array.isArray(data)
+      ? data
+      : data?.recipes && Array.isArray(data.recipes)
+        ? data.recipes
+        : [];
+    return rawList.map(normalizeRecipe);
   });
 };
 
 export const getRecipe = (id: string): Promise<Recipe> =>
   api.get(`/api/recipes/${id}`).then((res) => {
     const data = res.data;
-    if (data?.recipe) return data.recipe;
-    return data;
+    const raw = data?.recipe || data;
+    return normalizeRecipe(raw);
   });
 
 export const getComments = (recipeId: string): Promise<Comment[]> =>
@@ -65,8 +87,7 @@ export const createRecipe = async (
 ): Promise<Recipe> => {
   const { time, ...rest } = data;
   const res = await api.post('/api/recipes', { ...rest, cookTimeMin: time });
-  const recipe = res.data.recipe as Recipe & { cookTimeMin: number };
-  return { ...recipe, time: recipe.cookTimeMin };
+  return normalizeRecipe(res.data.recipe);
 };
 
 export const updateRecipe = async (
@@ -76,8 +97,7 @@ export const updateRecipe = async (
   const { time, ...rest } = data;
   const payload = { ...rest, ...(time !== undefined ? { cookTimeMin: time } : {}) };
   const res = await api.put(`/api/recipes/${id}`, payload);
-  const recipe = res.data.recipe as Recipe & { cookTimeMin: number };
-  return { ...recipe, time: recipe.cookTimeMin };
+  return normalizeRecipe(res.data.recipe);
 };
 
 export const deleteRecipe = (id: string): Promise<void> =>

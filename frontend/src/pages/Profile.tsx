@@ -5,12 +5,13 @@
 
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Utensils } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../api/client';
 import { Recipe } from '../types';
 import { RecipeCard } from '../components/RecipeCard';
 import { Skeleton } from '../components/ui/skeleton';
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '../components/ui/empty';
 
 export const Profile: React.FC = () => {
   const { user, token } = useAuth();
@@ -158,8 +159,12 @@ export const Profile: React.FC = () => {
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-danger text-danger p-4 font-mono text-sm">
-            {error}
+          <div className="bg-red-50 border border-danger text-danger p-4 sm:p-6 font-mono text-sm">
+            <p className="font-bold uppercase tracking-wider mb-2">Error Loading Recipes</p>
+            <p>{error}</p>
+            <button onClick={fetchMyRecipes} className="mt-3 text-xs uppercase tracking-wider underline hover:no-underline font-bold">
+              Try again
+            </button>
           </div>
         )}
 
@@ -194,19 +199,26 @@ export const Profile: React.FC = () => {
           </div>
         ) : (
           /* Empty state */
-          <div className="border border-border-custom bg-surface p-12 text-center" id="empty-profile-recipes">
-            <h3 className="font-serif text-xl font-bold mb-2">You haven't published any recipes yet.</h3>
-            <p className="text-sm text-text-muted mb-6 max-w-sm mx-auto font-sans leading-relaxed">
-              Your cookbook collections are looking a little bare. Click below to share your first signature culinary recipe.
-            </p>
-            <Link
-              to="/create"
-              className="btn-primary bg-accent hover:bg-accent-hover text-white font-mono text-xs uppercase tracking-wider px-6 py-2.5 inline-flex items-center gap-2 cursor-pointer"
-            >
-              <span>Create my first recipe</span>
-              <ArrowRight size={14} />
-            </Link>
-          </div>
+          <Empty className="border border-border-custom bg-surface p-12" id="empty-profile-recipes">
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <Utensils className="size-8 text-text-muted" />
+              </EmptyMedia>
+              <EmptyTitle>You haven't published any recipes yet.</EmptyTitle>
+              <EmptyDescription>
+                Your cookbook collections are looking a little bare. Click below to share your first signature culinary recipe.
+              </EmptyDescription>
+            </EmptyHeader>
+            <EmptyContent>
+              <Link
+                to="/create"
+                className="btn-primary bg-accent hover:bg-accent-hover text-white font-mono text-xs uppercase tracking-wider px-6 py-2.5 inline-flex items-center gap-2 cursor-pointer"
+              >
+                <span>Create my first recipe</span>
+                <ArrowRight size={14} />
+              </Link>
+            </EmptyContent>
+          </Empty>
         )}
       </div>
     </div>

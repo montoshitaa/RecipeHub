@@ -5,6 +5,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { useSearchParams } from 'react-router-dom';
 import { getRecipes } from '../api/recipes';
 import { Recipe } from '../types';
@@ -189,6 +190,9 @@ export const Home: React.FC = () => {
         <div className="bg-red-50 border border-danger text-danger p-5 font-mono text-sm">
           <p className="font-bold uppercase tracking-wider mb-2">Error Connecting Server</p>
           <p>{error}</p>
+          <button onClick={fetchRecipes} className="mt-3 text-xs uppercase tracking-wider underline hover:no-underline font-bold">
+            Try again
+          </button>
         </div>
       )}
 
@@ -218,18 +222,25 @@ export const Home: React.FC = () => {
         </div>
       ) : (
         /* Empty states as requested: No recipes found message and clear button */
-        <div className="border border-border-custom bg-surface p-12 text-center" id="empty-recipe-search">
-          <p className="font-serif text-xl font-bold mb-2">No recipes found.</p>
-          <p className="text-sm text-text-muted mb-6 max-w-sm mx-auto">
-            No recipes in our active catalog matched your currently selected text search keywords or dropdown parameters.
-          </p>
-          <button
-            onClick={handleClearFilters}
-            className="btn-primary bg-accent hover:bg-accent-hover text-white font-mono text-xs uppercase tracking-wider px-6 py-2.5 transition-colors cursor-pointer"
-          >
-            Clear Search & Filters
-          </button>
-        </div>
+        <Empty className="border border-border-custom bg-surface p-12" id="empty-recipe-search">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <Search className="size-8 text-text-muted" />
+            </EmptyMedia>
+            <EmptyTitle>No recipes found.</EmptyTitle>
+            <EmptyDescription>
+              No recipes in our active catalog matched your currently selected text search keywords or dropdown parameters.
+            </EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent>
+            <button
+              onClick={handleClearFilters}
+              className="btn-primary bg-accent hover:bg-accent-hover text-white font-mono text-xs uppercase tracking-wider px-6 py-2.5 transition-colors cursor-pointer"
+            >
+              Clear Search & Filters
+            </button>
+          </EmptyContent>
+        </Empty>
       )}
     </div>
   );

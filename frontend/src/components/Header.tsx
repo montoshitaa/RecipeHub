@@ -23,7 +23,7 @@ export const Header: React.FC = () => {
     <header className="border-b border-border-custom bg-surface w-full z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 sm:py-0 sm:h-18 flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
         {/* Brand Logo */}
-        <Link to="/" className="font-serif text-2xl font-bold tracking-tight text-text-custom hover:text-accent transition-colors">
+        <Link to="/" className="font-serif text-2xl font-bold tracking-tight text-text-custom hover:text-[#c0392b] transition-colors">
           RecipeHub
         </Link>
 

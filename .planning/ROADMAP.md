@@ -9,7 +9,7 @@ RecipeHub frontend is built from an AI Studio-generated scaffold (`frontend-to-i
 - [x] **Phase 1: Foundation & Authentication** — Adapt scaffold, configure real API, auth UI with real backend (completed 2026-06-05)
 - [ ] **Phase 2: Browse & Discover** — Recipe feed, filtering/search, detail page, comments with ratings
 - [ ] **Phase 3: Recipe Management** — Create/edit/delete recipes with dynamic forms and image upload
-- [ ] **Phase 4: Polish & UX** — Responsive design audit, loading/empty/error states across all views
+- [x] **Phase 4: Polish & UX** — Responsive design audit, loading/empty/error states across all views (completed 2026-06-06)
 
 ## Phase Details
 
@@ -111,11 +111,11 @@ Plans:
 
 **Wave 1** *(autonomous)*
 
-- [ ] 04-01-PLAN.md — Responsive design audit + critical bug fixes (routing dead links, broken Profile page, toast messages, CSS typo, animation fix)
+- [x] 04-01-PLAN.md — Responsive design audit + critical bug fixes (routing dead links, broken Profile page, toast messages, CSS typo, animation fix)
 
 **Wave 2** *(blocked on Wave 1 — file overlap dependencies)*
 
-- [ ] 04-02-PLAN.md — Loading & empty states: install spinner+empty components, normalize skeleton/spinner patterns across all views, empty state + error retry normalization
+- [x] 04-02-PLAN.md — Loading & empty states: install spinner+empty components, normalize skeleton/spinner patterns across all views, empty state + error retry normalization
 
 ## Progress
 
@@ -127,4 +127,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 1. Foundation & Authentication | 2/2 | Complete   | 2026-06-05 |
 | 2. Browse & Discover | 0/3 | Not started | - |
 | 3. Recipe Management | 0/3 | Not started | - |
-| 4. Polish & UX | 0/2 | Not started | - |
+| 4. Polish & UX | 2/2 | Complete   | 2026-06-06 |

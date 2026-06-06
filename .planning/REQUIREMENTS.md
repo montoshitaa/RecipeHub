@@ -39,9 +39,9 @@ Requirements for initial release. Each maps to roadmap phases.
 ### UI/UX Polish
 
 - [ ] **UX-01**: App is fully responsive across mobile, tablet, and desktop breakpoints
-- [ ] **UX-02**: All data-fetching views show loading skeleton or spinner states
+- [x] **UX-02**: All data-fetching views show loading skeleton or spinner states
 - [ ] **UX-03**: All forms show inline field validation errors and toast notifications on submit
-- [ ] **UX-04**: Empty states show friendly messages when no data exists (empty feed, no comments, etc.)
+- [x] **UX-04**: Empty states show friendly messages when no data exists (empty feed, no comments, etc.)
 - [x] **UX-05**: 404 page shown for invalid routes
 - [ ] **UX-06**: Difficulty badges use color coding (Easy=green, Medium=yellow, Hard=red)
 - [ ] **UX-07**: Ingredient checklist on detail page (check off as you cook, local state only)
@@ -106,9 +106,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SOCIAL-02 | Phase 2 — Browse & Discover | Pending |
 | SOCIAL-03 | Phase 2 — Browse & Discover | Pending |
 | UX-01 | Phase 4 — Polish & UX | Pending |
-| UX-02 | Phase 4 — Polish & UX | Pending |
+| UX-02 | Phase 4 — Polish & UX | Complete |
 | UX-03 | Phase 3 — Recipe Management | Pending |
-| UX-04 | Phase 4 — Polish & UX | Pending |
+| UX-04 | Phase 4 — Polish & UX | Complete |
 | UX-05 | Phase 1 — Foundation & Authentication | Complete |
 | UX-06 | Phase 2 — Browse & Discover | Pending |
 | UX-07 | Phase 2 — Browse & Discover | Pending |

@@ -22,7 +22,7 @@ const buildUserResponse = (user: IUserDocument) => ({
 
 const register = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, email, password } = req.body as { name?: string; email?: string; password?: string };
+    const { name, email, password, bio } = req.body as { name?: string; email?: string; password?: string; bio?: string };
 
     if (!name || !email || !password) {
       res.status(400).json({ message: 'Name, email, and password are required' });
@@ -42,6 +42,7 @@ const register = async (req: Request, res: Response): Promise<void> => {
       name: name.trim(),
       email: normalizedEmail,
       password: hashedPassword,
+      bio: bio?.trim() || undefined,
     });
 
     res.status(201).json({

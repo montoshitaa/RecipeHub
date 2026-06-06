@@ -17,12 +17,25 @@
             nodejs
             pnpm
             mongosh
+	    opencode
+            gsd
           ];
 
           shellHook = ''
-            echo "✦ RecipeHub dev shell"
-            echo "   Node: $(node --version)"
-            echo "   npm:  $(npm --version)"
+            export NPM_CONFIG_PREFIX="$PWD/.npm-global"
+            export PATH="$PWD/.npm-global/bin:$PATH"
+
+            GSD_MARKER="$PWD/.gsd-installed"
+
+            if [ ! -f "$GSD_MARKER" ]; then
+              echo "Installing GSD for OpenCode..."
+
+              npx -y @opengsd/gsd-core@latest install \
+                --ide opencode \
+                --project .
+
+              touch "$GSD_MARKER"
+            fi
           '';
         };
       });

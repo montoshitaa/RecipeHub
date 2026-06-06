@@ -21,7 +21,11 @@ export const CreateRecipe: React.FC = () => {
       toast.success('Recipe published successfully!');
       navigate('/recipes/' + response._id);
     } catch (err: any) {
-      const message = err?.response?.data?.message || 'Failed to create recipe';
+      const status = err?.response?.status;
+      let message = err?.response?.data?.message || 'Failed to create recipe';
+      if (status === 413) {
+        message = 'Image is too large. Please use a smaller image (under 1MB).';
+      }
       toast.error(message);
       throw err; // bubble error up to the Form so it renders top error banner
     } finally {

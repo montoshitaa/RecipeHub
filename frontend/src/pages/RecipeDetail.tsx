@@ -455,7 +455,7 @@ export const RecipeDetail: React.FC = () => {
             </div>
           ) : (
             <div className="space-y-6 divide-y divide-border-custom/50">
-              {comments.map((comment, index) => {
+              {(Array.isArray(comments) ? comments : []).map((comment, index) => {
                 const isCommentOwner = user && comment.userId === user._id;
 
                 return (

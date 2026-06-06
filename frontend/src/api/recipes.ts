@@ -27,7 +27,12 @@ export const getRecipe = (id: string): Promise<Recipe> =>
   api.get(`/api/recipes/${id}`).then((res) => res.data);
 
 export const getComments = (recipeId: string): Promise<Comment[]> =>
-  api.get(`/api/recipes/${recipeId}/comments`).then((res) => res.data ?? []);
+  api.get(`/api/recipes/${recipeId}/comments`).then((res) => {
+    const data = res.data;
+    if (Array.isArray(data)) return data;
+    if (data?.comments && Array.isArray(data.comments)) return data.comments;
+    return [];
+  });
 
 export const postComment = (
   recipeId: string,

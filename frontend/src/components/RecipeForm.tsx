@@ -108,6 +108,10 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
     }
     const file = acceptedFiles[0];
     if (!file) return;
+    if (file.size > 1024 * 1024) {
+      setDropError('Image must be under 1MB after compression');
+      return;
+    }
     const reader = new FileReader();
     reader.onload = () => {
       const dataUrl = reader.result as string;
@@ -120,7 +124,7 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: { 'image/*': ['.png', '.jpg', '.jpeg', '.webp'] },
-    maxSize: 5 * 1024 * 1024, // 5MB
+    maxSize: 1 * 1024 * 1024, // 1MB
     maxFiles: 1,
     disabled: isSubmitting,
     multiple: undefined,
@@ -205,11 +209,12 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
         steps: values.steps,
       });
     } catch (err: any) {
-      setTopError(
-        err?.response?.data?.message ||
-          err?.message ||
-          'An error occurred while publishing the recipe. Please try again.'
-      );
+      const status = err?.response?.status;
+      let message = err?.response?.data?.message || err?.message || 'An error occurred while publishing the recipe. Please try again.';
+      if (status === 413) {
+        message = 'Image is too large. Please use a smaller image (under 1MB) or reduce the image dimensions.';
+      }
+      setTopError(message);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
@@ -415,7 +420,7 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
                     Drag and drop an image here, or click to browse
                   </p>
                   <p className="text-xs text-text-muted font-mono mt-1">
-                    PNG, JPG, or WebP — max 5MB
+                    PNG, JPG, or WebP — max 1MB
                   </p>
                 </div>
               ) : (
@@ -704,7 +709,7 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
           <div className="space-y-4 mb-6">
             {stepsArray.fields.map((field, idx) => (
               <div key={field.id} className="flex items-start gap-4">
-                <span className="font-mono text-sm font-bold text-accent py-3 select-none w-6 text-right">
+                <span className="font-mono text-sm font-bold text-[#c0392b] py-3 select-none w-6 text-right">
                   {String(idx + 1).padStart(2, '0')}.
                 </span>
                 <div className="flex-grow">

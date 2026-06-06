@@ -1,4 +1,3 @@
-// @ts-nocheck — Phase 1 stub; re-implemented with axios in Phase 2
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -8,7 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { apiFetch } from '../api/client';
+import { api } from '../api/client';
 import { Recipe } from '../types';
 import { RecipeCard } from '../components/RecipeCard';
 
@@ -28,7 +27,8 @@ export const Profile: React.FC = () => {
     if (!user) return;
     setLoading(true);
     try {
-      const data: Recipe[] = await apiFetch('/api/recipes');
+      const res = await api.get('/api/recipes');
+      const data: Recipe[] = res.data;
       // Filter recipes client-side by matching authorId as requested
       const filtered = data.filter((recipe) => recipe.authorId === user._id);
       setMyRecipes(filtered);
@@ -59,7 +59,7 @@ export const Profile: React.FC = () => {
     if (!recipeToDelete || !token) return;
     setDeleting(true);
     try {
-      await apiFetch(`/api/recipes/${recipeToDelete}`, { method: 'DELETE' });
+      await api.delete(`/api/recipes/${recipeToDelete}`);
       setRecipeToDelete(null);
       // Re-fetch recipes
       await fetchMyRecipes();
@@ -199,7 +199,7 @@ export const Profile: React.FC = () => {
               Your cookbook collections are looking a little bare. Click below to share your first signature culinary recipe.
             </p>
             <Link
-              to="/new"
+              to="/create"
               className="btn-primary bg-accent hover:bg-accent-hover text-white font-mono text-xs uppercase tracking-wider px-6 py-2.5 inline-flex items-center gap-2 cursor-pointer"
             >
               <span>Create my first recipe</span>

@@ -39,7 +39,7 @@ export const Header: React.FC = () => {
           {token ? (
             <>
               <NavLink
-                to="/new"
+                to="/create"
                 className={({ isActive }) => (isActive ? activeStyle : inactiveStyle)}
               >
                 New Recipe

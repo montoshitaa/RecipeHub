@@ -212,7 +212,7 @@ export const RecipeDetail: React.FC = () => {
   const isRecipeOwner = user && recipe.authorId === user._id;
 
   return (
-    <div className="space-y-12 animate-fade-in" id={`recipe-detail-page-${recipe._id}`}>
+    <div className="space-y-12 animate-in fade-in duration-300" id={`recipe-detail-page-${recipe._id}`}>
       {/* Top Header Row with Back button and Admin tools */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between border border-border-custom py-4 gap-4 bg-surface px-4 sm:px-6">
         <Link

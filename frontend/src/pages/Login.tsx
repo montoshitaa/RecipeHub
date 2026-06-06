@@ -59,7 +59,7 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[60vh] flex items-center justify-center py-12 px-4 animate-fade-in" id="login-page">
+    <div className="min-h-[60vh] flex items-center justify-center py-12 px-4 animate-in fade-in duration-300" id="login-page">
       <div className="w-full max-w-[400px] border border-border-custom bg-surface p-6 sm:p-8 space-y-6">
         <div className="space-y-1 text-center">
           <span className="font-serif text-2xl font-bold tracking-tight text-text-custom block">

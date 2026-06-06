@@ -44,7 +44,7 @@ export const EditRecipe: React.FC = () => {
     setIsSubmitting(true);
     try {
       await updateRecipe(id, formData);
-      toast.success('Recipe updated!');
+      toast.success('Recipe updated successfully!');
       navigate('/recipes/' + id);
     } catch (err: any) {
       toast.error(err?.response?.data?.message || 'Failed to update recipe');
@@ -102,7 +102,7 @@ export const EditRecipe: React.FC = () => {
   if (error || !recipe) {
     return (
       <div className="border border-border-custom bg-surface p-8 max-w-xl mx-auto my-12 text-center" id="edit-recipe-error">
-        <p className="font-serif text-2xl font-bold text-text-cancel mb-2 text-text-custom">Retrieval Failed</p>
+        <p className="font-serif text-2xl font-bold mb-2 text-text-custom">Unable to Load Recipe</p>
         <p className="text-sm text-text-muted mb-6">{error || "This recipe details could not be retrieved."}</p>
         <button
           onClick={() => navigate('/')}
@@ -117,7 +117,7 @@ export const EditRecipe: React.FC = () => {
   const isRecipeOwner = user && recipe && recipe.authorId === user._id;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 animate-fade-in" id={`edit-recipe-page-${recipe._id}`}>
+    <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-300" id={`edit-recipe-page-${recipe._id}`}>
       <div className="border border-border-custom bg-surface p-6 sm:p-8">
         <h1 className="font-serif text-3xl font-bold tracking-tight text-text-custom mb-1">
           Edit Recipe Details

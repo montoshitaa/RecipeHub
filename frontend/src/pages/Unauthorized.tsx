@@ -8,7 +8,7 @@ export const Unauthorized: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] px-4 animate-fade-in" id="unauthorized-page">
+    <div className="flex flex-col items-center justify-center min-h-[60vh] px-4 animate-in fade-in duration-300" id="unauthorized-page">
       <div className="border border-danger/30 bg-[#fff5f5] p-10 sm:p-16 max-w-2xl w-full text-center space-y-6 relative overflow-hidden">
         
         <div className="relative z-10 flex flex-col items-center">

@@ -107,7 +107,7 @@ export const Home: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-8 animate-in fade-in duration-300">
       {/* Editorial Title / Hero block */}
       <div className="border border-border-custom bg-surface p-6 sm:p-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative overflow-hidden">
         <div className="absolute inset-0 opacity-[0.02] bg-[radial-gradient(#1a1a1a_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>

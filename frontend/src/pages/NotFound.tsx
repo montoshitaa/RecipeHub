@@ -4,7 +4,7 @@ import { ArrowLeft, SearchX } from 'lucide-react';
 
 export const NotFound: React.FC = () => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] px-4 animate-fade-in" id="not-found-page">
+    <div className="flex flex-col items-center justify-center min-h-[60vh] px-4 animate-in fade-in duration-300" id="not-found-page">
       <div className="border border-border-custom bg-surface p-10 sm:p-16 max-w-2xl w-full text-center space-y-6 relative overflow-hidden">
         <div className="absolute inset-0 opacity-[0.02] bg-[radial-gradient(#1a1a1a_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
         

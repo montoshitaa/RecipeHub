@@ -18,7 +18,7 @@ export const CreateRecipe: React.FC = () => {
     setIsSubmitting(true);
     try {
       const response = await createRecipe(formData);
-      toast.success('Recipe published!');
+      toast.success('Recipe published successfully!');
       navigate('/recipes/' + response._id);
     } catch (err: any) {
       const message = err?.response?.data?.message || 'Failed to create recipe';
@@ -30,7 +30,7 @@ export const CreateRecipe: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 animate-fade-in" id="create-recipe-page">
+    <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-300" id="create-recipe-page">
       <div className="border border-border-custom bg-surface p-6 sm:p-8">
         <h1 className="font-serif text-3xl font-bold tracking-tight text-text-custom mb-1">
           Publish a New Recipe

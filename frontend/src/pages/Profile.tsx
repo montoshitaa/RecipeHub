@@ -90,7 +90,7 @@ export const Profile: React.FC = () => {
   }
 
   return (
-    <div className="space-y-12 animate-fade-in" id="profile-page">
+    <div className="space-y-12 animate-in fade-in duration-300" id="profile-page">
       {/* User Information Card (Horizontal grid) */}
       <div className="border border-border-custom bg-surface p-6 sm:p-8 flex flex-col sm:flex-row items-center sm:items-start gap-6 relative">
         {/* Large Square Avatar (80px) */}

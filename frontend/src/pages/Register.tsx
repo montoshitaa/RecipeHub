@@ -44,7 +44,7 @@ export const Register: React.FC = () => {
       const response = await authApiRegister(data.name, data.email, data.password, data.bio);
       const backendUser = response.data.user;
       login(response.data.token, normalizeUser(backendUser));
-      toast.success('Account created!');
+      toast.success('Account created successfully!');
       navigate('/');
     } catch (err: any) {
       const message = err.response?.data?.message || 'Registration failed.';
@@ -53,7 +53,7 @@ export const Register: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[60vh] flex items-center justify-center py-12 px-4 animate-fade-in" id="register-page">
+    <div className="min-h-[60vh] flex items-center justify-center py-12 px-4 animate-in fade-in duration-300" id="register-page">
       <div className="w-full max-w-[400px] border border-border-custom bg-surface p-6 sm:p-8 space-y-6">
         <div className="space-y-1 text-center">
           <span className="font-serif text-2xl font-bold tracking-tight text-text-custom block">

@@ -109,8 +109,13 @@ Plans:
 
 Plans:
 
-- [ ] 04-01: Responsive design audit — verify all pages at mobile/tablet/desktop, fix layout breakages
-- [ ] 04-02: Loading & empty states — consistent skeleton/spinner patterns, empty state messages across all views
+**Wave 1** *(autonomous)*
+
+- [ ] 04-01-PLAN.md — Responsive design audit + critical bug fixes (routing dead links, broken Profile page, toast messages, CSS typo, animation fix)
+
+**Wave 2** *(blocked on Wave 1 — file overlap dependencies)*
+
+- [ ] 04-02-PLAN.md — Loading & empty states: install spinner+empty components, normalize skeleton/spinner patterns across all views, empty state + error retry normalization
 
 ## Progress
 

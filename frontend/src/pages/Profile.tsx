@@ -8,6 +8,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, Utensils } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../api/client';
+import { getRecipes } from '../api/recipes';
 import { Recipe } from '../types';
 import { RecipeCard } from '../components/RecipeCard';
 import { Skeleton } from '../components/ui/skeleton';
@@ -29,9 +30,7 @@ export const Profile: React.FC = () => {
     if (!user) return;
     setLoading(true);
     try {
-      const res = await api.get('/api/recipes');
-      const data: Recipe[] = res.data;
-      // Filter recipes client-side by matching authorId as requested
+      const data = await getRecipes();
       const filtered = data.filter((recipe) => recipe.authorId === user._id);
       setMyRecipes(filtered);
     } catch (err: any) {

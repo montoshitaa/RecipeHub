@@ -1,6 +1,19 @@
 import { api } from './client';
 import type { Recipe, Comment } from '../types';
 
+function normalizeComment(raw: any): Comment {
+  return {
+    _id: raw._id || raw.id,
+    recipeId: raw.recipeId,
+    userId: raw.userId,
+    userName: raw.userName || raw.authorName || raw.name || 'Anonymous',
+    userAvatar: raw.userAvatar || raw.avatarUrl,
+    content: raw.content,
+    rating: raw.rating,
+    createdAt: raw.createdAt,
+  };
+}
+
 export const getRecipes = (
   params?: { category?: string; difficulty?: string }
 ): Promise<Recipe[]> => {
@@ -33,16 +46,19 @@ export const getRecipe = (id: string): Promise<Recipe> =>
 export const getComments = (recipeId: string): Promise<Comment[]> =>
   api.get(`/api/recipes/${recipeId}/comments`).then((res) => {
     const data = res.data;
-    if (Array.isArray(data)) return data;
-    if (data?.comments && Array.isArray(data.comments)) return data.comments;
-    return [];
+    const rawComments: any[] = Array.isArray(data)
+      ? data
+      : data?.comments && Array.isArray(data.comments)
+        ? data.comments
+        : [];
+    return rawComments.map(normalizeComment);
   });
 
 export const postComment = (
   recipeId: string,
   data: { content: string; rating: number }
 ): Promise<Comment> =>
-  api.post(`/api/recipes/${recipeId}/comments`, data).then((res) => res.data);
+  api.post(`/api/recipes/${recipeId}/comments`, data).then((res) => normalizeComment(res.data));
 
 export const createRecipe = async (
   data: Omit<Recipe, '_id' | 'authorId' | 'createdAt'>

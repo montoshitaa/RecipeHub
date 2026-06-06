@@ -122,7 +122,7 @@ export const Home: React.FC = () => {
           </p>
         </div>
         <div className="text-right font-mono text-[11px] text-text-muted select-none border border-border-custom px-4 py-2.5 bg-[#fcfcfc] relative z-10 shrink-0 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
-          CATALOG TOTAL: <br className="hidden md:block"/> <span className="font-bold text-accent md:text-xl text-base">{recipes.length}</span> RECIPES
+          CATALOG TOTAL: <br className="hidden md:block"/> <span className="font-bold text-[#c0392b] md:text-xl text-base">{recipes.length}</span> RECIPES
         </div>
       </div>
 

@@ -50,6 +50,7 @@ export const Register: React.FC = () => {
     } catch (err: any) {
       const message = err.response?.data?.message || 'Registration failed.';
       setError(message);
+      toast.error(message);
     }
   };
 

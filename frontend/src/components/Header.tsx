@@ -63,7 +63,7 @@ export const Header: React.FC = () => {
           ) : (
             <Link
               to="/login"
-              className="btn-primary border border-text-custom bg-text-custom hover:bg-white hover:text-text-custom text-white font-mono text-[11px] uppercase tracking-wider px-4 py-2.5 transition-colors cursor-pointer"
+              className="border border-text-custom bg-text-custom hover:bg-white hover:text-text-custom text-white font-mono text-[11px] uppercase tracking-wider px-4 py-2.5 transition-colors cursor-pointer"
             >
               Sign in
             </Link>

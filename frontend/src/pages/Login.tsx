@@ -56,6 +56,7 @@ export const Login: React.FC = () => {
     } catch (err: any) {
       const message = err.response?.data?.message || 'Invalid email or password.';
       setError(message);
+      toast.error(message);
     }
   };
 

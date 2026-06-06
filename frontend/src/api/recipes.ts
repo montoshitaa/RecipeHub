@@ -15,7 +15,12 @@ export const getRecipes = (
   }
   const query = searchParams.toString();
   const path = query ? `/api/recipes?${query}` : '/api/recipes';
-  return api.get(path).then((res) => res.data);
+  return api.get(path).then((res) => {
+    const data = res.data;
+    if (Array.isArray(data)) return data;
+    if (data?.recipes && Array.isArray(data.recipes)) return data.recipes;
+    return [];
+  });
 };
 
 export const getRecipe = (id: string): Promise<Recipe> =>

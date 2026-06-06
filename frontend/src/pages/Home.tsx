@@ -91,7 +91,8 @@ export const Home: React.FC = () => {
   }, [category, difficulty]);
 
   // Client-side text search (title or tags) — uses debouncedSearch
-  const filteredRecipes = recipes.filter((recipe) => {
+  const safeRecipes = Array.isArray(recipes) ? recipes : [];
+  const filteredRecipes = safeRecipes.filter((recipe) => {
     if (!debouncedSearch.trim()) return true;
     const query = debouncedSearch.toLowerCase().trim();
     const matchesTitle = recipe.title.toLowerCase().includes(query);

@@ -309,13 +309,16 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
                           <SelectValue placeholder="Select category" />
                         </SelectTrigger>
                       </FormControl>
-                      <SelectContent>
-                        <SelectItem value="Breakfast">Breakfast</SelectItem>
-                        <SelectItem value="Lunch">Lunch</SelectItem>
-                        <SelectItem value="Dinner">Dinner</SelectItem>
-                        <SelectItem value="Dessert">Dessert</SelectItem>
-                        <SelectItem value="Snack">Snack</SelectItem>
-                        <SelectItem value="Other">Other</SelectItem>
+                      <SelectContent
+                        position="popper"
+                        className="rounded-none border border-border-custom bg-surface text-text-custom shadow-md"
+                      >
+                        <SelectItem value="Breakfast" className="rounded-none focus:bg-[#f5f4f0] focus:text-text-custom">Breakfast</SelectItem>
+                        <SelectItem value="Lunch" className="rounded-none focus:bg-[#f5f4f0] focus:text-text-custom">Lunch</SelectItem>
+                        <SelectItem value="Dinner" className="rounded-none focus:bg-[#f5f4f0] focus:text-text-custom">Dinner</SelectItem>
+                        <SelectItem value="Dessert" className="rounded-none focus:bg-[#f5f4f0] focus:text-text-custom">Dessert</SelectItem>
+                        <SelectItem value="Snack" className="rounded-none focus:bg-[#f5f4f0] focus:text-text-custom">Snack</SelectItem>
+                        <SelectItem value="Other" className="rounded-none focus:bg-[#f5f4f0] focus:text-text-custom">Other</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage className="text-xs text-danger font-mono mt-1.5" />
@@ -341,10 +344,13 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
                           <SelectValue placeholder="Select difficulty" />
                         </SelectTrigger>
                       </FormControl>
-                      <SelectContent>
-                        <SelectItem value="Easy">Easy</SelectItem>
-                        <SelectItem value="Medium">Medium</SelectItem>
-                        <SelectItem value="Hard">Hard</SelectItem>
+                      <SelectContent
+                        position="popper"
+                        className="rounded-none border border-border-custom bg-surface text-text-custom shadow-md"
+                      >
+                        <SelectItem value="Easy" className="rounded-none focus:bg-[#f5f4f0] focus:text-text-custom">Easy</SelectItem>
+                        <SelectItem value="Medium" className="rounded-none focus:bg-[#f5f4f0] focus:text-text-custom">Medium</SelectItem>
+                        <SelectItem value="Hard" className="rounded-none focus:bg-[#f5f4f0] focus:text-text-custom">Hard</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage className="text-xs text-danger font-mono mt-1.5" />

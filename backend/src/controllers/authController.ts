@@ -84,4 +84,29 @@ const getMe = (req: Request, res: Response): void => {
   res.json({ user: buildUserResponse(req.user!) });
 };
 
-export { register, login, getMe };
+const updateProfile = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { name, bio } = req.body as { name?: string; bio?: string };
+
+    const updates: Record<string, string> = {};
+    if (name !== undefined) updates.name = name.trim();
+    if (bio !== undefined) updates.bio = bio.trim() || '';
+
+    if (Object.keys(updates).length === 0) {
+      res.status(400).json({ message: 'No fields to update' });
+      return;
+    }
+
+    const user = await User.findByIdAndUpdate(req.user!._id, updates, { new: true }).select('-password');
+    if (!user) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
+
+    res.json({ user: buildUserResponse(user) });
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating profile' });
+  }
+};
+
+export { register, login, getMe, updateProfile };

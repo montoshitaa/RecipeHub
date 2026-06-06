@@ -19,3 +19,6 @@ export const register = (name: string, email: string, password: string, bio?: st
   api.post('/api/auth/register', { name, email, password, bio: bio?.trim() || undefined });
 
 export const getMe = () => api.get('/api/auth/me');
+
+export const updateProfile = (data: { name?: string; bio?: string }) =>
+  api.patch('/api/auth/me', data);

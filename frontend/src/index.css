@@ -15,8 +15,6 @@
   --color-border-custom: #d0cec8;
   --color-text-custom: #1a1a1a;
   --color-text-muted: #6b6b6b;
-  --color-accent: #c0392b;
-  --color-accent-hover: #a93226;
   --color-danger: #e74c3c;
   --color-star: #e67e22;
 }
@@ -70,6 +68,11 @@ body {
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+@theme {
+  --color-accent: #c0392b;
+  --color-accent-hover: #a93226;
 }
 
 :root {

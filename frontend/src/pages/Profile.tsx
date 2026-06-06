@@ -5,9 +5,10 @@
 
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Utensils } from 'lucide-react';
+import { ArrowRight, Pencil, Utensils, X, Check } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../api/client';
+import { updateProfile as apiUpdateProfile, normalizeUser } from '../api/auth';
 import { getRecipes } from '../api/recipes';
 import { Recipe } from '../types';
 import { RecipeCard } from '../components/RecipeCard';
@@ -15,7 +16,7 @@ import { Skeleton } from '../components/ui/skeleton';
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '../components/ui/empty';
 
 export const Profile: React.FC = () => {
-  const { user, token } = useAuth();
+  const { user, token, updateUser } = useAuth();
   const navigate = useNavigate();
 
   const [myRecipes, setMyRecipes] = useState<Recipe[]>([]);
@@ -25,6 +26,12 @@ export const Profile: React.FC = () => {
   // Deletion helper states
   const [recipeToDelete, setRecipeToDelete] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
+
+  // Profile editing states
+  const [editing, setEditing] = useState(false);
+  const [editName, setEditName] = useState('');
+  const [editBio, setEditBio] = useState('');
+  const [saving, setSaving] = useState(false);
 
   const fetchMyRecipes = async () => {
     if (!user) return;
@@ -54,6 +61,34 @@ export const Profile: React.FC = () => {
   const handleDeleteClick = (recipeId: string, e: React.MouseEvent) => {
     e.stopPropagation();
     setRecipeToDelete(recipeId);
+  };
+
+  const startEditing = () => {
+    setEditName(user?.name || '');
+    setEditBio(user?.bio || '');
+    setEditing(true);
+  };
+
+  const cancelEditing = () => {
+    setEditing(false);
+    setEditName('');
+    setEditBio('');
+  };
+
+  const saveProfile = async () => {
+    if (!user) return;
+    setSaving(true);
+    try {
+      const res = await apiUpdateProfile({ name: editName, bio: editBio });
+      const updatedUser = res.data.user;
+      updateUser(normalizeUser(updatedUser));
+      setEditing(false);
+    } catch (err: any) {
+      console.error("Failed to update profile", err);
+      alert(err?.response?.data?.message || "Failed to save profile changes.");
+    } finally {
+      setSaving(false);
+    }
   };
 
   const executeDeleteRecipe = async () => {
@@ -101,21 +136,70 @@ export const Profile: React.FC = () => {
 
         <div className="space-y-3 flex-grow text-center sm:text-left">
           <div className="space-y-1">
-            <h1 className="font-serif text-2xl font-bold tracking-tight text-text-custom leading-tight">
-              {user.name}
-            </h1>
+            {editing ? (
+              <input
+                type="text"
+                value={editName}
+                onChange={(e) => setEditName(e.target.value)}
+                className="font-serif text-2xl font-bold tracking-tight text-text-custom leading-tight w-full bg-[#fcfcfc] border border-border-custom p-2 focus:outline-none focus:border-text-custom focus:bg-white transition-all"
+              />
+            ) : (
+              <h1 className="font-serif text-2xl font-bold tracking-tight text-text-custom leading-tight">
+                {user.name}
+              </h1>
+            )}
             <p className="text-xs font-mono text-text-muted select-all block">
               {user.email}
             </p>
           </div>
 
-          <p className="text-sm text-text-muted leading-relaxed font-sans max-w-xl">
-            {user.bio || "No biography provided. Tell us a bit about your favorite spices or preferred cooking techniques."}
-          </p>
+          {editing ? (
+            <textarea
+              value={editBio}
+              onChange={(e) => setEditBio(e.target.value)}
+              rows={3}
+              placeholder="Tell us a bit about your favorite spices or preferred cooking techniques..."
+              className="text-sm leading-relaxed font-sans max-w-xl w-full bg-[#fcfcfc] border border-border-custom p-2 focus:outline-none focus:border-text-custom focus:bg-white transition-all"
+            />
+          ) : (
+            <p className="text-sm text-text-muted leading-relaxed font-sans max-w-xl">
+              {user.bio || "No biography provided. Tell us a bit about your favorite spices or preferred cooking techniques."}
+            </p>
+          )}
 
-          <p className="text-[10px] uppercase font-mono tracking-wider text-text-muted select-none pt-2.5 border-t border-border-custom/40 inline-block w-full sm:w-auto">
-            Member since: {formatMemberSince(user.createdAt)}
-          </p>
+          <div className="flex items-center gap-2 pt-2.5 border-t border-border-custom/40 w-full sm:w-auto">
+            <p className="text-[10px] uppercase font-mono tracking-wider text-text-muted select-none">
+              Member since: {formatMemberSince(user.createdAt)}
+            </p>
+            {!editing ? (
+              <button
+                onClick={startEditing}
+                className="ml-auto text-text-muted hover:text-text-custom transition-colors p-1 cursor-pointer"
+                title="Edit profile"
+              >
+                <Pencil size={14} />
+              </button>
+            ) : (
+              <div className="ml-auto flex items-center gap-1">
+                <button
+                  onClick={saveProfile}
+                  disabled={saving}
+                  className="text-green-600 hover:text-green-700 transition-colors p-1 cursor-pointer disabled:opacity-50"
+                  title="Save"
+                >
+                  <Check size={16} />
+                </button>
+                <button
+                  onClick={cancelEditing}
+                  disabled={saving}
+                  className="text-red-500 hover:text-red-600 transition-colors p-1 cursor-pointer disabled:opacity-50"
+                  title="Cancel"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

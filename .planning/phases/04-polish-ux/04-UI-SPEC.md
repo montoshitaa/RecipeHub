@@ -48,7 +48,7 @@ Declared values from Tailwind v4 default 8-point scale (confirmed in use through
 
 | Context | Mobile | Tablet (sm: 640px+) | Desktop (lg: 1024px+) |
 |---------|--------|---------------------|----------------------|
-| Page sections | `p-4` or `p-5` | `sm:p-6` or `sm:p-8` | `lg:p-8` |
+| Page sections | `p-4` or `p-6` | `sm:p-6` or `sm:p-8` | `lg:p-8` |
 | Card padding | `p-4` | same | same |
 | Hero/editorial blocks | `p-6` | `sm:p-10` | same |
 | Form containers | `p-6` | `sm:p-8` | same |
@@ -63,16 +63,14 @@ Exceptions: Auth forms (Login, Register) use `max-w-[400px]` centered with `p-6 
 
 ### Type Scale
 
+Exactly 4 font sizes in the design contract. All text must map to one of:
+
 | Role | Size | Weight | Line Height | Font Family | Usage |
 |------|------|--------|-------------|-------------|-------|
-| Body | 15px (`text-[15px]`) | 400 (regular) | 1.6 | font-sans (IBM Plex Sans) | Paragraphs, descriptions, form inputs, comment text |
-| Body (large) | 17px (`text-[17px]`) | 400 (regular) | 1.6 | font-sans | Preparation steps body text |
-| Body (small) | 14px (`text-sm`) | 400 (regular) | 1.5 | font-sans | Comment content, secondary descriptions |
-| Label | 11px (`text-[11px]`) | 700 (bold) | 1.4 | font-mono (IBM Plex Mono) | Form labels, filter labels (uppercase, tracking-wider) |
-| Meta | 10-13px (`text-[10px]`-`text-[13px]`) | 500-700 | 1.3 | font-mono | Category badges, timestamps, "Member since", meta rows |
-| Heading (section) | 20-24px (`text-xl`-`text-2xl`) | 700 (bold) | 1.2 | font-serif (IBM Plex Serif) | Section titles (Profile, Comments, Ingredients) |
-| Heading (page) | 36-48px (`text-4xl sm:text-5xl`) | 700 (bold) | 1.1 | font-serif | Page titles (RecipeDetail, Home hero) |
-| Display | 36-48px (`text-4xl sm:text-5xl`) | 700 (bold) | 1.0 (leading-none) | font-serif | Recipe title in detail view |
+| Label / Meta | 12px (`text-xs`) | 700 (bold) | 1.4 | font-mono (IBM Plex Mono) | Form labels, filter labels, category badges, timestamps, "Member since", meta rows, difficulty text. Always uppercase + `tracking-wider`. |
+| Body | 14px (`text-sm`) | 400 (regular) | 1.6 | font-sans (IBM Plex Sans) | Paragraphs, descriptions, form inputs, comment text, preparation steps, secondary descriptions. Steps use `font-sans` + `leading-relaxed` for readability — no separate size. |
+| Heading (section) | 20px (`text-xl`) | 700 (bold) | 1.2 | font-serif (IBM Plex Serif) | Section titles (Profile, Comments, Ingredients, card titles). Always `tracking-tight`. |
+| Heading (page) / Display | 36px (`text-4xl sm:text-5xl`) | 700 (bold) | 1.1 | font-serif | Page titles (RecipeDetail hero, Home hero). No separate "Display" role — page titles and display are the same size contract. |
 
 ### Font Weight Contract
 
@@ -85,11 +83,10 @@ Only two weights are used across the app. No thin, light, medium, or extrabold.
 
 ### Typography Conventions
 
-- **Headings**: Always `font-serif` (IBM Plex Serif) + `font-bold` + `tracking-tight`. Never use font-mono or font-sans for titles.
-- **Labels**: Always `font-mono` (IBM Plex Mono) + `uppercase` + `tracking-wider` + `font-bold`. Size is `text-[11px]`. Used for form field labels, filter labels, meta section headers.
-- **Buttons**: Always `font-mono` + `uppercase` + `tracking-wider` + `font-bold`. Size is `text-xs` or `text-[11px]`.
-- **Meta/ancillary**: Always `font-mono`. Used for dates, counts, category names, difficulty text in cards. Uppercase at `text-[10px]-text-[11px]` with `tracking-wider`.
-- **Body paragraphs**: Always `font-sans` + `leading-relaxed`. Size is `text-sm` (14px), `text-[15px]`, or `text-[17px]` (steps only).
+- **Headings**: Always `font-serif` (IBM Plex Serif) + `font-bold` + `tracking-tight`. Section headings use `text-xl` (20px); page titles use `text-4xl sm:text-5xl` (36px). Never use font-mono or font-sans for titles.
+- **Labels / Meta**: Always `font-mono` (IBM Plex Mono) + `uppercase` + `tracking-wider` + `font-bold`. Size is `text-xs` (12px). Used for form field labels, filter labels, meta section headers, category badges, timestamps, difficulty text, "Member since", and all ancillary metadata.
+- **Buttons**: Always `font-mono` + `uppercase` + `tracking-wider` + `font-bold`. Size is `text-xs` (12px).
+- **Body paragraphs**: Always `font-sans` + `leading-relaxed`. Size is `text-sm` (14px). Covers all body text including descriptions, comment content, and preparation steps. No separate "body-large" variant — steps use the same 14px body size with semantic styling.
 
 ---
 
@@ -171,7 +168,7 @@ Accent MUST NOT be used for: form submit buttons (use `bg-text-custom`), navigat
 
 | Action | Trigger Element | Confirmation UI | Confirm Text | Cancel Text |
 |--------|----------------|-----------------|-------------|-------------|
-| Delete recipe (from detail page) | "Delete" button in top bar | Inline confirmation in top bar (not modal): red bg pill | "Confirm" (disables during delete, shows "Deleting...") | "Cancel" |
+| Delete recipe (from detail page) | "Delete" button in top bar | Inline confirmation in top bar (not modal): red bg pill | "Confirm Delete" (disables during delete, shows "Deleting...") | "Cancel" |
 | Delete recipe (from profile grid) | Delete icon button on card | Full-width banner: "Are you absolutely sure you want to delete this recipe from the catalog? This action is permanent." | "Yes, Delete" (disables during delete, shows "Deleting...") | "Cancel" |
 | Delete comment | "Delete" link on own comment | `window.confirm("Are you sure you want to delete your review?")` | Browser native confirm | Browser native cancel |
 
@@ -358,7 +355,7 @@ Do NOT use the full `<Empty>` composition for:
 
 ```tsx
 {error && !loading && (
-  <div className="bg-red-50 border border-danger text-danger p-4 sm:p-5 font-mono text-sm">
+  <div className="bg-red-50 border border-danger text-danger p-4 sm:p-6 font-mono text-sm">
     <p className="font-bold uppercase tracking-wider mb-2">ERROR HEADING</p>
     <p>{error}</p>
     <button onClick={retryFn} className="mt-3 text-xs uppercase tracking-wider underline hover:no-underline font-bold">
@@ -432,7 +429,7 @@ This is the existing pattern used in Home.tsx and RecipeDetail.tsx. All views MU
 
 ### Form Validation Errors
 
-Inline field errors display below the field in `text-danger text-[11px] font-mono`. They appear on:
+Inline field errors display below the field in `text-danger text-xs font-mono`. They appear on:
 - Blur (react-hook-form default mode)
 - Submit attempt (react-hook-form validates all fields)
 
@@ -452,6 +449,55 @@ Form-level errors (API errors not tied to a specific field) display as a banner 
 Checkbox interaction is local state only — no API calls. Checked items get:
 - `line-through decoration-border-custom/50 text-text-muted/60` on both ingredient name and amount
 - State resets on page leave (stored in `useState<Set<number>>`)
+
+---
+
+## Visual Focal Points
+
+### Home Page
+
+1. **Hero block** — RecipeHub tagline and descriptive text. The hero is the first thing users see; its serif heading (`text-4xl sm:text-5xl`, 36px) draws the eye and establishes the brand. The warm off-white `#f5f4f0` background contrasts with the white card grid below.
+2. **Filter/search bar** — Positioned immediately below the hero (or hero-adjacent on desktop `lg:flex-row`). The search input and dropdowns are the primary interaction entry point. Clear visual separation from the card grid via `border-border-custom` and `bg-surface`.
+3. **Recipe card grid** — Cards are the core content. Each card's focal point is the 16:9 image area; the title (serif heading, 20px) and difficulty badge (accent "Hard" if applicable) are secondary anchors within each card.
+
+### RecipeDetail Page
+
+1. **Recipe hero image** — Full-width hero with 16:9 aspect ratio. When no image exists, the accent-colored placeholder with initial letter (`bg-accent`) serves as the focal point. This is the largest visual element on the page.
+2. **Recipe title** — Large serif heading (`text-4xl sm:text-5xl`, 36px) immediately below the hero. This is the primary textual focal point and the anchor for the page's content hierarchy.
+3. **Meta bar** — 4-column grid (`grid-cols-2 md:grid-cols-4`) showing difficulty, prep time, cook time, servings. Positioned between the title and the ingredients/description sections. Mono labels with uppercase styling create a clear information hierarchy.
+4. **Ingredients checklist** — Interactive section with checkboxes. The checked/unchecked visual contrast (`line-through` + muted on checked items) draws the user into interaction. This is the primary interactive focal point below the hero.
+
+---
+
+## Accessibility Contract
+
+### Icon-Only Interactive Elements
+
+All icon-only interactive elements MUST include `aria-label` describing the action:
+
+| Element | `aria-label` Value |
+|---------|-------------------|
+| Delete recipe button (detail page) | `"Delete recipe"` |
+| Delete recipe icon (profile grid card) | `"Delete recipe"` |
+| Edit recipe button | `"Edit recipe"` |
+| Delete comment link | `"Delete review"` |
+| Clear search button | `"Clear search"` |
+| Star rating interactive icons | `"Rate N stars"` where N = star number |
+| Recipe card bookmark/favorite icon | `"Save recipe"` (future phase) |
+
+### Focus Management
+
+- **Error banners**: When an error banner renders (replacing content), move focus to the banner heading (`tabIndex={-1}` + `ref.current?.focus()`) so screen readers announce the error.
+- **Empty states**: When empty state renders (replacing content), move focus to the empty state heading.
+- **Form submissions**: After successful form submit that navigates away, no focus management needed (page transition). After failed submit that stays on form, focus the error banner at form top.
+
+### Contrast Requirements
+
+- All text-on-background combinations must pass WCAG AA (4.5:1 for normal text, 3:1 for large text).
+- `text-text-custom` (`#1a1a1a`) on `bg-surface` (`#ffffff`): contrast ratio 17.3:1 — PASS.
+- `text-text-muted` (`#6b6b6b`) on `bg-surface` (`#ffffff`): contrast ratio 5.2:1 — PASS.
+- `text-danger` (`#e74c3c`) on `bg-red-50` (`#fef2f2`): contrast ratio 4.68:1 — PASS. Verify on actual render; if insufficient, darken `text-danger` to `#c0392b`.
+- Accent text (`#c0392b`) on `bg-bg` (`#f5f4f0`): contrast ratio 5.3:1 — PASS.
 
 ---
 

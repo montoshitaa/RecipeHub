@@ -89,7 +89,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
       case 'Medium':
         return `bg-star text-white ${base}`;
       case 'Hard':
-        return `bg-accent text-white ${base}`;
+        return `bg-[#c0392b] text-white ${base}`;
       default:
         return `bg-border-custom text-text-muted ${base}`;
     }
@@ -154,7 +154,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
           </div>
 
           {/* Title */}
-          <h3 className="font-serif text-xl font-bold text-text-custom leading-snug tracking-tight mb-2 group-hover:text-accent transition-colors line-clamp-1">
+          <h3 className="font-serif text-xl font-bold text-text-custom leading-snug tracking-tight mb-2 group-hover:text-[#c0392b] transition-colors line-clamp-1">
             {recipe.title}
           </h3>
         </div>
@@ -189,7 +189,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
             )}
 
             {/* Link prompt indicator */}
-            <span className="text-[11px] uppercase tracking-wider font-mono text-text-custom font-bold group-hover:text-accent transition-colors flex items-center gap-1.5 border-b border-transparent group-hover:border-accent pb-0.5">
+            <span className="text-[11px] uppercase tracking-wider font-mono text-text-custom font-bold group-hover:text-[#c0392b] transition-colors flex items-center gap-1.5 border-b border-transparent group-hover:border-[#c0392b] pb-0.5">
               <span>View</span>
               <ArrowRight size={12} className="transition-transform group-hover:translate-x-1" />
             </span>

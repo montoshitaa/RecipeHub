@@ -85,7 +85,7 @@ export const Register: React.FC = () => {
               type="text"
               {...formRegister('name')}
               placeholder="e.g. Alice Green"
-              className="w-full bg-[#fcfcfc] border border-border-custom p-3.5 text-text-custom font-sans focus:outline-none focus:border-text-custom focus:bg-white transition-all text-sm"
+              className="w-full bg-[#fcfcfc] border border-border-custom p-3.5 text-text-custom font-sans focus:outline-none focus:border-text-custom focus:bg-white transition-all text-sm rounded-none"
             />
             {errors.name && (
               <p className="text-danger text-[11px] font-mono mt-1">{errors.name.message}</p>
@@ -102,7 +102,7 @@ export const Register: React.FC = () => {
               type="email"
               {...formRegister('email')}
               placeholder="you@domain.com"
-              className="w-full bg-[#fcfcfc] border border-border-custom p-3.5 text-text-custom font-sans focus:outline-none focus:border-text-custom focus:bg-white transition-all text-sm"
+              className="w-full bg-[#fcfcfc] border border-border-custom p-3.5 text-text-custom font-sans focus:outline-none focus:border-text-custom focus:bg-white transition-all text-sm rounded-none"
             />
             {errors.email && (
               <p className="text-danger text-[11px] font-mono mt-1">{errors.email.message}</p>
@@ -119,7 +119,7 @@ export const Register: React.FC = () => {
               type="password"
               {...formRegister('password')}
               placeholder="••••••••"
-              className="w-full bg-[#fcfcfc] border border-border-custom p-3.5 text-text-custom font-sans focus:outline-none focus:border-text-custom focus:bg-white transition-all text-sm"
+              className="w-full bg-[#fcfcfc] border border-border-custom p-3.5 text-text-custom font-sans focus:outline-none focus:border-text-custom focus:bg-white transition-all text-sm rounded-none"
             />
             {errors.password && (
               <p className="text-danger text-[11px] font-mono mt-1">{errors.password.message}</p>
@@ -144,7 +144,7 @@ export const Register: React.FC = () => {
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="w-full border border-text-custom bg-text-custom hover:bg-white hover:text-text-custom text-white py-3.5 font-mono text-xs uppercase tracking-widest font-bold transition-all cursor-pointer disabled:opacity-50 disabled:cursor-wait shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)] hover:shadow-none translate-y-0 hover:translate-y-1"
+            className="w-full border border-text-custom bg-text-custom hover:bg-white hover:text-text-custom text-white py-3.5 font-mono text-xs uppercase tracking-widest font-bold transition-all cursor-pointer disabled:opacity-50 disabled:cursor-wait shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)] hover:shadow-none translate-y-0 hover:translate-y-1 rounded-none"
           >
             {isSubmitting ? (
               <><Spinner data-icon="inline-start" className="size-4" /> Creating account...</>

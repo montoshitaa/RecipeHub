@@ -160,9 +160,16 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
           </div>
 
           {/* Title */}
-          <h3 className="font-serif text-xl font-bold text-text-custom leading-snug tracking-tight mb-2 group-hover:text-[#c0392b] transition-colors line-clamp-1">
+          <h3 className="font-serif text-xl font-bold text-text-custom leading-snug tracking-tight mb-1 group-hover:text-[#c0392b] transition-colors line-clamp-1">
             {recipe.title}
           </h3>
+
+          {/* Description */}
+          {recipe.description && (
+            <p className="text-xs text-text-muted leading-relaxed mb-3 line-clamp-2">
+              {recipe.description}
+            </p>
+          )}
         </div>
 
         <div>

@@ -12,6 +12,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
+import { Spinner } from '../components/ui/spinner';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
@@ -144,7 +145,11 @@ export const Register: React.FC = () => {
             disabled={isSubmitting}
             className="w-full border border-text-custom bg-text-custom hover:bg-white hover:text-text-custom text-white py-3.5 font-mono text-xs uppercase tracking-widest font-bold transition-all cursor-pointer disabled:opacity-50 disabled:cursor-wait shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)] hover:shadow-none translate-y-0 hover:translate-y-1"
           >
-            {isSubmitting ? 'Creating account...' : 'Create account'}
+            {isSubmitting ? (
+              <><Spinner data-icon="inline-start" className="size-4" /> Creating account...</>
+            ) : (
+              'Create account'
+            )}
           </Button>
         </form>
 

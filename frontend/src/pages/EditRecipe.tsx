@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { useAuth } from '../context/AuthContext';
 import { getRecipe, updateRecipe, deleteRecipe } from '../api/recipes';
 import { RecipeForm } from '../components/RecipeForm';
+import { Skeleton } from '../components/ui/skeleton';
 import { Recipe } from '../types';
 
 export const EditRecipe: React.FC = () => {
@@ -70,28 +71,28 @@ export const EditRecipe: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto space-y-6 animate-pulse" id="edit-recipe-loader">
+      <div className="max-w-4xl mx-auto space-y-6" id="edit-recipe-loader">
         <div className="border border-border-custom bg-surface p-6 sm:p-8 space-y-4">
-          <div className="h-10 bg-neutral-200 w-1/3"></div>
-          <div className="h-4 bg-neutral-200 w-2/3"></div>
+          <Skeleton className="h-10 w-1/3" />
+          <Skeleton className="h-4 w-2/3" />
         </div>
         <div className="border border-border-custom bg-surface p-8 sm:p-10 space-y-8">
           <div className="space-y-2">
-            <div className="h-4 bg-neutral-200 w-32"></div>
-            <div className="h-12 bg-neutral-200 w-full"></div>
+            <Skeleton className="h-4 w-32" />
+            <Skeleton className="h-12 w-full" />
           </div>
           <div className="space-y-2">
-            <div className="h-4 bg-neutral-200 w-32"></div>
-            <div className="h-24 bg-neutral-200 w-full"></div>
+            <Skeleton className="h-4 w-32" />
+            <Skeleton className="h-24 w-full" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <div className="h-4 bg-neutral-200 w-32"></div>
-              <div className="h-12 bg-neutral-200 w-full"></div>
+              <Skeleton className="h-4 w-32" />
+              <Skeleton className="h-12 w-full" />
             </div>
             <div className="space-y-2">
-              <div className="h-4 bg-neutral-200 w-32"></div>
-              <div className="h-12 bg-neutral-200 w-full"></div>
+              <Skeleton className="h-4 w-32" />
+              <Skeleton className="h-12 w-full" />
             </div>
           </div>
         </div>

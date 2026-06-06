@@ -11,6 +11,8 @@ import { getRecipe, getComments, postComment, deleteComment, deleteRecipe } from
 import { Checkbox } from '../components/ui/checkbox';
 import { Textarea } from '../components/ui/textarea';
 import { Separator } from '../components/ui/separator';
+import { Skeleton } from '../components/ui/skeleton';
+import { Spinner } from '../components/ui/spinner';
 import { Recipe, Comment } from '../types';
 import { useAuth } from '../context/AuthContext';
 import { StarRating } from '../components/StarRating';
@@ -146,45 +148,45 @@ export const RecipeDetail: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="space-y-12 animate-pulse" id="detail-loader">
+      <div className="space-y-12" id="detail-loader">
         {/* Top Header Skeleton */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between border border-border-custom bg-surface p-4 sm:p-6 pb-4 gap-4">
-          <div className="h-4 bg-neutral-200 w-32"></div>
+        <div className="border border-border-custom bg-surface p-4 sm:p-6 pb-4">
+          <Skeleton className="h-4 w-32" />
         </div>
 
         {/* Main Two-Column split skeleton */}
         <div className="grid grid-cols-1 lg:grid-cols-10 gap-8">
           {/* Left column */}
           <div className="lg:col-span-6 space-y-6">
-            <div className="border border-border-custom bg-neutral-200 aspect-[16/9] w-full max-h-[360px]"></div>
+            <Skeleton className="w-full aspect-[16/9] border border-border-custom" />
             <div className="space-y-4">
-              <div className="h-10 bg-neutral-200 w-3/4"></div>
-              <div className="h-16 bg-neutral-200 w-full mb-6"></div>
+              <Skeleton className="h-10 w-3/4" />
+              <Skeleton className="h-16 w-full" />
               <div className="border border-border-custom bg-surface p-5 grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="space-y-1"><div className="h-3 bg-neutral-200 w-12"></div><div className="h-4 bg-neutral-200 w-20"></div></div>
-                <div className="space-y-1"><div className="h-3 bg-neutral-200 w-12"></div><div className="h-4 bg-neutral-200 w-20"></div></div>
-                <div className="space-y-1"><div className="h-3 bg-neutral-200 w-12"></div><div className="h-4 bg-neutral-200 w-20"></div></div>
-                <div className="space-y-1"><div className="h-3 bg-neutral-200 w-12"></div><div className="h-4 bg-neutral-200 w-20"></div></div>
+                <div className="space-y-1"><Skeleton className="h-3 w-12" /><Skeleton className="h-4 w-20" /></div>
+                <div className="space-y-1"><Skeleton className="h-3 w-12" /><Skeleton className="h-4 w-20" /></div>
+                <div className="space-y-1"><Skeleton className="h-3 w-12" /><Skeleton className="h-4 w-20" /></div>
+                <div className="space-y-1"><Skeleton className="h-3 w-12" /><Skeleton className="h-4 w-20" /></div>
               </div>
             </div>
           </div>
           {/* Right column */}
           <div className="lg:col-span-4 space-y-6">
-            <div className="border border-border-custom bg-surface p-5 flex items-start gap-4 h-32">
-              <div className="w-14 h-14 bg-neutral-200 shrink-0"></div>
+            <div className="border border-border-custom bg-surface p-5 flex items-start gap-4">
+              <Skeleton className="w-14 h-14 shrink-0" />
               <div className="space-y-3 flex-grow">
-                <div className="h-3 bg-neutral-200 w-1/3"></div>
-                <div className="h-6 bg-neutral-200 w-3/4"></div>
-                <div className="h-3 bg-neutral-200 w-full"></div>
+                <Skeleton className="h-3 w-1/3" />
+                <Skeleton className="h-6 w-3/4" />
+                <Skeleton className="h-3 w-full" />
               </div>
             </div>
-            <div className="border border-border-custom bg-surface p-5 space-y-4 h-64">
-              <div className="h-6 bg-neutral-200 w-1/2 border-b border-border-custom pb-2"></div>
-              <div className="space-y-3 mt-4">
-                <div className="h-4 bg-neutral-200 w-full"></div>
-                <div className="h-4 bg-neutral-200 w-full"></div>
-                <div className="h-4 bg-neutral-200 w-4/5"></div>
-                <div className="h-4 bg-neutral-200 w-5/6"></div>
+            <div className="border border-border-custom bg-surface p-5 space-y-4">
+              <Skeleton className="h-6 w-1/2" />
+              <div className="space-y-3">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-4/5" />
+                <Skeleton className="h-4 w-5/6" />
               </div>
             </div>
           </div>
@@ -553,7 +555,7 @@ export const RecipeDetail: React.FC = () => {
                 className="btn-primary w-full border border-text-custom bg-text-custom hover:bg-white hover:text-text-custom text-white py-3.5 font-mono text-xs uppercase font-bold tracking-widest transition-all cursor-pointer disabled:opacity-50 disabled:cursor-wait flex items-center justify-center gap-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)] hover:shadow-none translate-y-0 hover:translate-y-1"
               >
                 {submittingComment ? (
-                  "Submitting feedback..."
+                  <><Spinner data-icon="inline-start" className="size-4" /> Submitting feedback...</>
                 ) : (
                   <>
                     <span>Post Comment</span>

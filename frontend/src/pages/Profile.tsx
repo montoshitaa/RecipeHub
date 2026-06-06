@@ -10,6 +10,7 @@ import { useAuth } from '../context/AuthContext';
 import { api } from '../api/client';
 import { Recipe } from '../types';
 import { RecipeCard } from '../components/RecipeCard';
+import { Skeleton } from '../components/ui/skeleton';
 
 export const Profile: React.FC = () => {
   const { user, token } = useAuth();
@@ -165,15 +166,15 @@ export const Profile: React.FC = () => {
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {[1, 2, 3].map((num) => (
-              <div key={num} className="border border-border-custom bg-surface animate-pulse" id={`profile-skeleton-${num}`}>
-                <div className="w-full aspect-[16/9] bg-neutral-200 border-b border-border-custom"></div>
+              <div key={num} className="border border-border-custom bg-surface" id={`profile-skeleton-${num}`}>
+                <Skeleton className="w-full aspect-[16/9] border-b border-border-custom" />
                 <div className="p-5 space-y-4">
-                  <div className="h-3 w-1/3 bg-neutral-200 font-mono"></div>
-                  <div className="h-6 w-4/5 bg-neutral-200"></div>
-                  <div className="h-4 w-1/2 bg-neutral-200"></div>
+                  <Skeleton className="h-3 w-1/3" />
+                  <Skeleton className="h-6 w-4/5" />
+                  <Skeleton className="h-4 w-1/2" />
                   <div className="border-t border-border-custom pt-4 flex justify-between mt-2">
-                    <div className="h-4 w-1/4 bg-neutral-200"></div>
-                    <div className="h-4 w-1/5 bg-neutral-200"></div>
+                    <Skeleton className="h-4 w-1/4" />
+                    <Skeleton className="h-4 w-1/5" />
                   </div>
                 </div>
               </div>

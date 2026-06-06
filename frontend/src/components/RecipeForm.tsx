@@ -15,6 +15,7 @@ import { Recipe, Ingredient } from '../types';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
+import { Spinner } from './ui/spinner';
 import {
   Select,
   SelectContent,
@@ -769,7 +770,10 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
             className="btn-primary w-full sm:w-auto border border-text-custom bg-text-custom hover:bg-white hover:text-text-custom text-white px-8 py-3.5 font-mono text-[11px] font-bold uppercase tracking-widest cursor-pointer disabled:opacity-50 disabled:cursor-wait flex items-center justify-center gap-3 transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)] hover:shadow-none translate-y-0 hover:translate-y-1 rounded-none h-auto"
           >
             {isSubmitting ? (
-              'Publishing recipe...'
+              <>
+                <Spinner data-icon="inline-start" className="size-4" />
+                {initialData ? 'Updating recipe...' : 'Publishing recipe...'}
+              </>
             ) : initialData ? (
               <>
                 <span>Save changes</span>

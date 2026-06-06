@@ -6,6 +6,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
+import { Spinner } from '../components/ui/spinner';
 import { useAuth } from '../context/AuthContext';
 import { login as authApiLogin, normalizeUser } from '../api/auth';
 import { useForm } from 'react-hook-form';
@@ -119,7 +120,11 @@ export const Login: React.FC = () => {
             disabled={isSubmitting}
             className="w-full border border-text-custom bg-text-custom hover:bg-white hover:text-text-custom text-white py-3.5 font-mono text-xs uppercase tracking-widest font-bold transition-all cursor-pointer disabled:opacity-50 disabled:cursor-wait shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)] hover:shadow-none translate-y-0 hover:translate-y-1"
           >
-            {isSubmitting ? 'Authenticating...' : 'Sign in'}
+            {isSubmitting ? (
+              <><Spinner data-icon="inline-start" className="size-4" /> Authenticating...</>
+            ) : (
+              'Sign in'
+            )}
           </Button>
         </form>
 

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://api.recipehub.lat/api',
+  baseURL: 'https://api.recipehub.lat',
   headers: { 'Content-Type': 'application/json' },
 });
 

@@ -98,4 +98,4 @@ Resume file: None
 | 260605-suf | Fix login button style, / route redirect, auth feedback, recipes.filter error | 2026-06-06 | 6cc3edc | [260605-suf-fix-the-login-button-style-and-fix-the-d](./quick/260605-suf-fix-the-login-button-style-and-fix-the-d/) |
 | 260605-xqr | Fix steps number color, image size errors, comments.map crash | 2026-06-06 | fd90688 | |
 | 260605-tdf | Fix recipes not showing who created them and profile not showing user recipes | 2026-06-06 | 4e9f748 | [260605-tdf-fix-that-recipes-dont-show-who-created-i](./quick/260605-tdf-fix-that-recipes-dont-show-who-created-i/) |
-| 260605-tgw | Fix recipe description not showing on profile recipe cards | 2026-06-06 | d69c8cb | [260605-tgw-fix-that-recipe-description-is-not-showi](./quick/260605-tgw-fix-that-recipe-description-is-not-showi/) |
+| 260605-tgw | Fix recipe description and bio not showing on profile | 2026-06-06 | 6caddd8 | [260605-tgw-fix-that-recipe-description-is-not-showi](./quick/260605-tgw-fix-that-recipe-description-is-not-showi/) |

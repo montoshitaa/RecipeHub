@@ -22,7 +22,7 @@ const buildUserResponse = (user: IUserDocument) => ({
 
 const register = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, email, password } = req.body as { name?: string; email?: string; password?: string };
+    const { name, email, password, bio } = req.body as { name?: string; email?: string; password?: string; bio?: string };
 
     if (!name || !email || !password) {
       res.status(400).json({ message: 'Name, email, and password are required' });
@@ -42,6 +42,7 @@ const register = async (req: Request, res: Response): Promise<void> => {
       name: name.trim(),
       email: normalizedEmail,
       password: hashedPassword,
+      bio: bio?.trim() || undefined,
     });
 
     res.status(201).json({
@@ -83,4 +84,29 @@ const getMe = (req: Request, res: Response): void => {
   res.json({ user: buildUserResponse(req.user!) });
 };
 
-export { register, login, getMe };
+const updateProfile = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { name, bio } = req.body as { name?: string; bio?: string };
+
+    const updates: Record<string, string> = {};
+    if (name !== undefined) updates.name = name.trim();
+    if (bio !== undefined) updates.bio = bio.trim() || '';
+
+    if (Object.keys(updates).length === 0) {
+      res.status(400).json({ message: 'No fields to update' });
+      return;
+    }
+
+    const user = await User.findByIdAndUpdate(req.user!._id, updates, { new: true }).select('-password');
+    if (!user) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
+
+    res.json({ user: buildUserResponse(user) });
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating profile' });
+  }
+};
+
+export { register, login, getMe, updateProfile };

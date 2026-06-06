@@ -149,7 +149,13 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
         <div>
           {/* Metadata row */}
           <div className="flex items-center justify-between text-[11px] font-mono tracking-wider uppercase text-text-muted mb-2">
-            <span>{recipe.category}</span>
+            <span className="truncate flex items-center gap-1.5">
+              <span>{recipe.category}</span>
+              <span className="opacity-40 mx-0.5">·</span>
+              <span className="truncate max-w-[120px]" title={recipe.authorName || 'Anonymous'}>
+                {recipe.authorName || 'Anonymous'}
+              </span>
+            </span>
             <Badge className={difficultyBadgeClass}>{recipe.difficulty}</Badge>
           </div>
 

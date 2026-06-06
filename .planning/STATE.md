@@ -5,7 +5,7 @@ milestone_name: milestone
 status: verifying
 stopped_at: Completed 04-polish-ux-02-PLAN.md
 last_updated: "2026-06-06T02:28:27.776Z"
-last_activity: 2026-06-06 -- Completed quick task 260605-suf: Fix login button style, / route redirect, auth feedback, recipes.filter error
+last_activity: 2026-06-06 -- Completed quick tasks 260605-suf (login/style/redirect) and 260605-xqr (steps color/image/comments)
 progress:
   total_phases: 4
   completed_phases: 4
@@ -96,3 +96,4 @@ Resume file: None
 | # | Description | Date | Commit | Directory |
 |---|-------------|------|--------|-----------|
 | 260605-suf | Fix login button style, / route redirect, auth feedback, recipes.filter error | 2026-06-06 | 6cc3edc | [260605-suf-fix-the-login-button-style-and-fix-the-d](./quick/260605-suf-fix-the-login-button-style-and-fix-the-d/) |
+| 260605-xqr | Fix steps number color, image size errors, comments.map crash | 2026-06-06 | fd90688 | |

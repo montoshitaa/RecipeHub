@@ -28,4 +28,10 @@
 
 ## Architecture
 The Vite dev server proxies `/api/*` requests to `http://localhost:4000`.
-Authentication uses JWT Bearer tokens stored in localStorage.
+
+Authentication uses a dual-token JWT scheme:
+- **Access token** (15min) — stored in a module-level JS variable (never touches localStorage)
+- **Refresh token** (7 days) — HttpOnly, Secure, SameSite=Strict cookie, path restricted to `/api/auth`
+- **CSRF token** — non-HttpOnly cookie with double-submit pattern via `X-CSRF-Token` header
+- On 401: the axios response interceptor silently refreshes the access token via `POST /api/auth/refresh`
+- On page load: `AuthContext.initAuth` restores the session from the refresh cookie

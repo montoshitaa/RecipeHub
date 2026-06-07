@@ -28,19 +28,35 @@ type LoginFormData = z.infer<typeof loginSchema>;
 export const Login: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login, token } = useAuth();
+  const { login, token, loading } = useAuth();
 
   const [error, setError] = useState<string | null>(null);
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
 
-  // If already logged in, redirect to home immediately
+  // Wait for silent auth to resolve before showing login form
   useEffect(() => {
+    if (loading) return;
     if (token) {
       navigate('/');
     }
-  }, [token, navigate]);
+  }, [token, loading, navigate]);
+
+  if (loading) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center py-12 px-4">
+        <div className="border border-border-custom bg-surface p-12 flex flex-col items-center gap-5">
+          <Spinner className="size-10 text-text-custom" />
+          <div className="font-mono tracking-widest text-text-custom text-[11px] font-bold uppercase">
+            Restoring Session...
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (token) return null;
 
   // Read target return route for user convenience
   const fromPath = (location.state as any)?.from?.pathname || '/';
@@ -50,7 +66,7 @@ export const Login: React.FC = () => {
     try {
       const response = await authApiLogin(data.email, data.password);
       const backendUser = response.data.user;
-      login(response.data.token, normalizeUser(backendUser));
+      login(response.data.accessToken, normalizeUser(backendUser));
       toast.success('Welcome back!');
       navigate(fromPath, { replace: true });
     } catch (err: any) {

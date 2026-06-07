@@ -28,7 +28,7 @@ type RegisterFormData = z.infer<typeof registerSchema>;
 
 export const Register: React.FC = () => {
   const navigate = useNavigate();
-  const { login, token } = useAuth();
+  const { login, token, loading } = useAuth();
 
   const [error, setError] = useState<string | null>(null);
   const { register: formRegister, handleSubmit, formState: { errors, isSubmitting } } = useForm<RegisterFormData>({
@@ -36,15 +36,31 @@ export const Register: React.FC = () => {
   });
 
   useEffect(() => {
+    if (loading) return;
     if (token) navigate('/');
-  }, [token, navigate]);
+  }, [token, loading, navigate]);
+
+  if (loading) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center py-12 px-4">
+        <div className="border border-border-custom bg-surface p-12 flex flex-col items-center gap-5">
+          <Spinner className="size-10 text-text-custom" />
+          <div className="font-mono tracking-widest text-text-custom text-[11px] font-bold uppercase">
+            Restoring Session...
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (token) return null;
 
   const onSubmit = async (data: RegisterFormData) => {
     setError(null);
     try {
       const response = await authApiRegister(data.name, data.email, data.password, data.bio);
       const backendUser = response.data.user;
-      login(response.data.token, normalizeUser(backendUser));
+      login(response.data.accessToken, normalizeUser(backendUser));
       toast.success('Account created successfully!');
       navigate('/');
     } catch (err: any) {

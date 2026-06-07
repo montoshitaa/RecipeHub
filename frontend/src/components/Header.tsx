@@ -11,8 +11,8 @@ export const Header: React.FC = () => {
   const { token, logout, user } = useAuth();
   const navigate = useNavigate();
 
-  const handleSignOut = () => {
-    logout();
+  const handleSignOut = async () => {
+    await logout();
     navigate('/login');
   };
 

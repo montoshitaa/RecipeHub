@@ -28,12 +28,27 @@ const generateCsrfToken = (): string => {
 
 const isSecure = process.env.NODE_ENV === 'production';
 
-const setAuthCookies = (res: Response, refreshToken: string, csrfToken: string) => {
+function cookieDomain(req: Request): string | undefined {
+  const host = req.hostname;
+  if (host === 'localhost' || host === '127.0.0.1' || /^\d+\.\d+\.\d+\.\d+$/.test(host)) {
+    return undefined;
+  }
+  const parts = host.split('.');
+  if (parts.length > 2) {
+    return '.' + parts.slice(-2).join('.');
+  }
+  return undefined;
+}
+
+const setAuthCookies = (req: Request, res: Response, refreshToken: string, csrfToken: string) => {
+  const domain = cookieDomain(req);
+
   res.cookie('refreshToken', refreshToken, {
     httpOnly: true,
     secure: isSecure,
     sameSite: 'strict',
     path: '/api/auth',
+    domain,
     maxAge: COOKIE_MAX_AGE,
   });
 
@@ -42,14 +57,16 @@ const setAuthCookies = (res: Response, refreshToken: string, csrfToken: string) 
     secure: isSecure,
     sameSite: 'strict',
     path: '/',
+    domain,
     maxAge: COOKIE_MAX_AGE,
   });
 };
 
-const clearAuthCookies = (res: Response) => {
-  res.clearCookie('refreshToken', { httpOnly: true, secure: isSecure, sameSite: 'strict', path: '/api/auth' });
-  res.clearCookie('csrfToken', { httpOnly: false, secure: isSecure, sameSite: 'strict', path: '/' });
-};
+function clearAuthCookies(req: Request, res: Response) {
+  const domain = cookieDomain(req);
+  res.clearCookie('refreshToken', { httpOnly: true, secure: isSecure, sameSite: 'strict', path: '/api/auth', domain });
+  res.clearCookie('csrfToken', { httpOnly: false, secure: isSecure, sameSite: 'strict', path: '/', domain });
+}
 
 const buildUserResponse = (user: IUserDocument) => ({
   id: user._id,
@@ -92,7 +109,7 @@ const register = async (req: Request, res: Response): Promise<void> => {
 
     await User.findByIdAndUpdate(userId, { $push: { refreshTokens: refreshToken } });
 
-    setAuthCookies(res, refreshToken, csrfToken);
+    setAuthCookies(req, res, refreshToken, csrfToken);
 
     res.status(201).json({
       user: buildUserResponse(user),
@@ -128,7 +145,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
 
     await User.findByIdAndUpdate(userId, { $push: { refreshTokens: refreshToken } });
 
-    setAuthCookies(res, refreshToken, csrfToken);
+    setAuthCookies(req, res, refreshToken, csrfToken);
 
     res.json({
       user: buildUserResponse(user!),
@@ -159,7 +176,7 @@ const refresh = async (req: Request, res: Response): Promise<void> => {
     const user = await User.findById(decoded.id);
 
     if (!user) {
-      clearAuthCookies(res);
+      clearAuthCookies(req, res);
       res.status(401).json({ message: 'User not found' });
       return;
     }
@@ -170,7 +187,7 @@ const refresh = async (req: Request, res: Response): Promise<void> => {
       user.refreshTokens = [token];
       await user.save();
     } else if (!user.refreshTokens.includes(token)) {
-      clearAuthCookies(res);
+      clearAuthCookies(req, res);
       res.status(401).json({ message: 'Session expired. Please log in again.' });
       return;
     } else {
@@ -184,11 +201,11 @@ const refresh = async (req: Request, res: Response): Promise<void> => {
     user.refreshTokens.push(newRefreshToken);
     await user.save();
 
-    setAuthCookies(res, newRefreshToken, csrfToken);
+    setAuthCookies(req, res, newRefreshToken, csrfToken);
 
     res.json({ accessToken, csrfToken });
   } catch (error) {
-    clearAuthCookies(res);
+    clearAuthCookies(req, res);
     res.status(401).json({ message: 'Invalid or expired refresh token' });
   }
 };
@@ -197,7 +214,7 @@ const logout = async (req: Request, res: Response): Promise<void> => {
   if (req.user?._id) {
     await User.findByIdAndUpdate(req.user._id, { $set: { refreshTokens: [] } });
   }
-  clearAuthCookies(res);
+  clearAuthCookies(req, res);
   res.json({ message: 'Logged out successfully' });
 };
 

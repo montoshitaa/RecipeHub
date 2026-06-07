@@ -6,6 +6,7 @@ export interface IUser {
   password: string;
   bio?: string;
   avatarUrl?: string;
+  refreshTokens: string[];
   createdAt: Date;
 }
 
@@ -32,6 +33,10 @@ const userSchema = new Schema<IUserDocument>({
   },
   avatarUrl: {
     type: String,
+  },
+  refreshTokens: {
+    type: [String],
+    default: [],
   },
   createdAt: {
     type: Date,

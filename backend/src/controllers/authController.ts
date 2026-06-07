@@ -1,14 +1,54 @@
 import { Request, Response } from 'express';
+import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User, { IUserDocument } from '../models/User';
 
-const createToken = (userId: string): string => {
+const ACCESS_TOKEN_EXPIRY = '15m';
+const REFRESH_TOKEN_EXPIRY = '7d';
+const COOKIE_MAX_AGE = 7 * 24 * 60 * 60 * 1000;
+
+const generateAccessToken = (userId: string): string => {
   if (!process.env.JWT_SECRET) {
     throw new Error('JWT_SECRET is not configured');
   }
+  return jwt.sign({ id: userId, type: 'access' }, process.env.JWT_SECRET, { expiresIn: ACCESS_TOKEN_EXPIRY });
+};
 
-  return jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: '7d' });
+const generateRefreshToken = (userId: string): string => {
+  if (!process.env.JWT_SECRET) {
+    throw new Error('JWT_SECRET is not configured');
+  }
+  return jwt.sign({ id: userId, type: 'refresh' }, process.env.JWT_SECRET, { expiresIn: REFRESH_TOKEN_EXPIRY });
+};
+
+const generateCsrfToken = (): string => {
+  return crypto.randomBytes(32).toString('hex');
+};
+
+const isSecure = process.env.NODE_ENV === 'production';
+
+const setAuthCookies = (res: Response, refreshToken: string, csrfToken: string) => {
+  res.cookie('refreshToken', refreshToken, {
+    httpOnly: true,
+    secure: isSecure,
+    sameSite: 'strict',
+    path: '/api/auth',
+    maxAge: COOKIE_MAX_AGE,
+  });
+
+  res.cookie('csrfToken', csrfToken, {
+    httpOnly: false,
+    secure: isSecure,
+    sameSite: 'strict',
+    path: '/',
+    maxAge: COOKIE_MAX_AGE,
+  });
+};
+
+const clearAuthCookies = (res: Response) => {
+  res.clearCookie('refreshToken', { httpOnly: true, secure: isSecure, sameSite: 'strict', path: '/api/auth' });
+  res.clearCookie('csrfToken', { httpOnly: false, secure: isSecure, sameSite: 'strict', path: '/' });
 };
 
 const buildUserResponse = (user: IUserDocument) => ({
@@ -45,9 +85,19 @@ const register = async (req: Request, res: Response): Promise<void> => {
       bio: bio?.trim() || undefined,
     });
 
+    const userId = user._id.toString();
+    const accessToken = generateAccessToken(userId);
+    const refreshToken = generateRefreshToken(userId);
+    const csrfToken = generateCsrfToken();
+
+    await User.findByIdAndUpdate(userId, { $push: { refreshTokens: refreshToken } });
+
+    setAuthCookies(res, refreshToken, csrfToken);
+
     res.status(201).json({
       user: buildUserResponse(user),
-      token: createToken(user._id.toString()),
+      accessToken,
+      csrfToken,
     });
   } catch (error) {
     res.status(500).json({ message: 'Error registering user' });
@@ -71,13 +121,84 @@ const login = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
+    const userId = user!._id.toString();
+    const accessToken = generateAccessToken(userId);
+    const refreshToken = generateRefreshToken(userId);
+    const csrfToken = generateCsrfToken();
+
+    await User.findByIdAndUpdate(userId, { $push: { refreshTokens: refreshToken } });
+
+    setAuthCookies(res, refreshToken, csrfToken);
+
     res.json({
       user: buildUserResponse(user!),
-      token: createToken(user!._id.toString()),
+      accessToken,
+      csrfToken,
     });
   } catch (error) {
     res.status(500).json({ message: 'Error logging in' });
   }
+};
+
+const refresh = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const token = req.cookies?.refreshToken;
+
+    if (!token) {
+      res.status(401).json({ message: 'Refresh token not found' });
+      return;
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { id: string; type: string };
+
+    if (decoded.type !== 'refresh') {
+      res.status(401).json({ message: 'Invalid token type' });
+      return;
+    }
+
+    const user = await User.findById(decoded.id);
+
+    if (!user) {
+      clearAuthCookies(res);
+      res.status(401).json({ message: 'User not found' });
+      return;
+    }
+
+    const userId = user._id.toString();
+
+    if (!user.refreshTokens || user.refreshTokens.length === 0) {
+      user.refreshTokens = [token];
+      await user.save();
+    } else if (!user.refreshTokens.includes(token)) {
+      clearAuthCookies(res);
+      res.status(401).json({ message: 'Session expired. Please log in again.' });
+      return;
+    } else {
+      user.refreshTokens = user.refreshTokens.filter(t => t !== token);
+    }
+
+    const accessToken = generateAccessToken(userId);
+    const newRefreshToken = generateRefreshToken(userId);
+    const csrfToken = generateCsrfToken();
+
+    user.refreshTokens.push(newRefreshToken);
+    await user.save();
+
+    setAuthCookies(res, newRefreshToken, csrfToken);
+
+    res.json({ accessToken, csrfToken });
+  } catch (error) {
+    clearAuthCookies(res);
+    res.status(401).json({ message: 'Invalid or expired refresh token' });
+  }
+};
+
+const logout = async (req: Request, res: Response): Promise<void> => {
+  if (req.user?._id) {
+    await User.findByIdAndUpdate(req.user._id, { $set: { refreshTokens: [] } });
+  }
+  clearAuthCookies(res);
+  res.json({ message: 'Logged out successfully' });
 };
 
 const getMe = (req: Request, res: Response): void => {
@@ -109,4 +230,4 @@ const updateProfile = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export { register, login, getMe, updateProfile };
+export { register, login, refresh, logout, getMe, updateProfile };

@@ -78,6 +78,22 @@ API available at `http://localhost:4000/api`.
 
 ## Authentication
 
+Uses a dual-token JWT scheme with server-side refresh token tracking:
+
+| Token | Lifetime | Storage |
+|---|---|---|
+| **Access token** | 15 minutes | Response body (`accessToken`), sent as `Authorization: Bearer` header |
+| **Refresh token** | 7 days | HttpOnly, Secure, SameSite=Strict cookie (`refreshToken`), path `/api/auth` |
+| **CSRF token** | 7 days | Non-HttpOnly cookie (`csrfToken`), verified via `X-CSRF-Token` header |
+
+### Flow
+
+1. **Login/Register** → Backend generates all three tokens, sets cookies, returns `accessToken` and user in the response body. The refresh token is stored server-side in the user's `refreshTokens` array.
+2. **API requests** → Frontend sends access token as `Authorization: Bearer <accessToken>` and CSRF token as `X-CSRF-Token` header.
+3. **Token refresh** → When the access token expires (401), the frontend calls `POST /api/auth/refresh`. The HttpOnly refresh cookie is sent automatically. The backend validates the token against the stored list, rotates it (old removed, new one stored), and returns a fresh access token.
+4. **Reuse detection** → If a refresh token is presented after being rotated (stolen token scenario), it's rejected and the client's cookies are cleared. Other valid sessions on the same account are unaffected.
+5. **Logout** → Server clears the user's stored refresh tokens and expires the cookies server-side.
+
 Protected endpoints require:
 
 ```
@@ -108,9 +124,23 @@ Both return:
 ```json
 {
   "user": { "id": "...", "name": "Test User", "email": "test@example.com" },
-  "token": "..."
+  "accessToken": "..."
 }
 ```
+
+`POST /api/auth/refresh`
+
+No body required. Sends `refreshToken` HttpOnly cookie automatically. Returns:
+
+```json
+{
+  "accessToken": "..."
+}
+```
+
+`POST /api/auth/logout`
+
+Clears the user's stored refresh tokens and expires cookies. Requires `Authorization: Bearer` header.
 
 ---
 
@@ -121,7 +151,10 @@ GET    /api/health
 
 POST   /api/auth/register
 POST   /api/auth/login
+POST   /api/auth/refresh
+POST   /api/auth/logout
 GET    /api/auth/me
+PATCH  /api/auth/me
 
 GET    /api/recipes
 POST   /api/recipes

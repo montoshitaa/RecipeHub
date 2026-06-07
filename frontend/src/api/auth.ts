@@ -18,6 +18,12 @@ export const login = (email: string, password: string) =>
 export const register = (name: string, email: string, password: string, bio?: string) =>
   api.post('/api/auth/register', { name, email, password, bio: bio?.trim() || undefined });
 
+export const refreshToken = () =>
+  api.post('/api/auth/refresh');
+
+export const logout = () =>
+  api.post('/api/auth/logout');
+
 export const getMe = () => api.get('/api/auth/me');
 
 export const updateProfile = (data: { name?: string; bio?: string }) =>

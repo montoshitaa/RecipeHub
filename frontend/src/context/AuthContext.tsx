@@ -1,12 +1,8 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
-import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User } from '../types';
 import { api } from '../api/client';
-import { normalizeUser } from '../api/auth';
+import { setAccessToken } from '../api/client';
+import { normalizeUser, refreshToken as apiRefreshToken, logout as apiLogout } from '../api/auth';
 
 export interface AuthContextType {
   user: User | null;
@@ -24,41 +20,42 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
-  // Function to log in
   const login = (newToken: string, newUser: User) => {
-    localStorage.setItem("token", newToken);
-    localStorage.setItem("recipehub_user", JSON.stringify(newUser));
+    setAccessToken(newToken);
     setToken(newToken);
     setUser(newUser);
   };
 
   const updateUser = (updatedUser: User) => {
-    localStorage.setItem("recipehub_user", JSON.stringify(updatedUser));
     setUser(updatedUser);
   };
 
-  // Function to log out
-  const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("recipehub_user");
+  const logout = async () => {
+    try {
+      await apiLogout();
+    } catch {
+      // Ignore errors — still clear local state
+    }
+    setAccessToken(null);
     setToken(null);
     setUser(null);
   };
 
-  // On mount check token and rehydrate user
+  // Silent auth on mount: try to refresh the access token using the HttpOnly cookie
   useEffect(() => {
     const initAuth = async () => {
-      const savedToken = localStorage.getItem("token");
-      if (savedToken) {
-        try {
-          const res = await api.get('/api/auth/me');
-          const fetchedUser = normalizeUser(res.data.user);
-          setUser(fetchedUser);
-          setToken(savedToken);
-        } catch (err) {
-          console.error("Auth rehydration failed, logging out.", err);
-          logout();
-        }
+      try {
+        const refreshRes = await apiRefreshToken();
+        const newToken: string = refreshRes.data.accessToken;
+        setAccessToken(newToken);
+        setToken(newToken);
+
+        const meRes = await api.get('/api/auth/me');
+        const fetchedUser = normalizeUser(meRes.data.user);
+        setUser(fetchedUser);
+      } catch {
+        setToken(null);
+        setUser(null);
       }
       setLoading(false);
     };

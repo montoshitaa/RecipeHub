@@ -35,7 +35,8 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
     const fetchComments = async () => {
       try {
         const res = await api.get(`/api/recipes/${recipe._id}/comments`);
-        const comments: Comment[] = res.data;
+        const body = res.data;
+        const comments: Comment[] = (Array.isArray(body) ? body : body?.comments ?? []);
         if (mounted) {
           if (comments && comments.length > 0) {
             const sum = comments.reduce((acc, c) => acc + c.rating, 0);

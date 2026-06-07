@@ -6,7 +6,7 @@ function normalizeComment(raw: any): Comment {
     _id: raw._id || raw.id,
     recipeId: raw.recipeId,
     userId: raw.userId,
-    userName: raw.userName || raw.authorName || raw.name || 'Anonymous',
+    userName: raw.userName || raw.authorName || raw.name || raw.userId?.name || 'Anonymous',
     userAvatar: raw.userAvatar || raw.avatarUrl,
     content: raw.content,
     rating: raw.rating,

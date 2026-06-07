@@ -39,7 +39,7 @@ const registerUser = async (email = 'test-user@example.com') => {
     })
     .expect(201);
 
-  return response.body as { user: Record<string, unknown>; token: string };
+  return response.body as { user: Record<string, unknown>; accessToken: string };
 };
 
 const createRecipe = async (token: string) => {
@@ -99,7 +99,7 @@ describe('RecipeHub API', () => {
 
     expect(response.user.email).toBe('test-user@example.com');
     expect((response.user as Record<string, unknown>).password).toBeUndefined();
-    expect(response.token).toBeDefined();
+    expect(response.accessToken).toBeDefined();
   });
 
   test('GET /api/auth/me rejects requests without a token', async () => {
@@ -109,7 +109,7 @@ describe('RecipeHub API', () => {
   });
 
   test('POST /api/recipes creates a recipe for an authenticated user', async () => {
-    const { token } = await registerUser();
+    const { accessToken: token } = await registerUser();
     const recipe = await createRecipe(token);
 
     expect(recipe.title).toBe('Test Chicken Soup');
@@ -117,7 +117,7 @@ describe('RecipeHub API', () => {
   });
 
   test('POST /api/recipes/:id/comments creates a comment for an authenticated user', async () => {
-    const { token } = await registerUser();
+    const { accessToken: token } = await registerUser();
     const recipe = await createRecipe(token);
 
     const response = await request(app)

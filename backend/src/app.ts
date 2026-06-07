@@ -1,15 +1,20 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 import authRoutes from './routes/auth.routes';
 import recipeRoutes from './routes/recipe.routes';
 import commentRoutes from './routes/comment.routes';
+import { csrfProtection } from './middlewares/csrf.middleware';
 import { notFound, errorHandler } from './middlewares/error.middleware';
 
 const app = express();
 
-app.use(cors());
+app.use(cors({ credentials: true, origin: true }));
 app.use(express.json());
+app.use(cookieParser());
+
+app.use('/api', csrfProtection);
 
 app.get('/api/health', (req: Request, res: Response) => {
   res.json({ status: 'ok', timestamp: new Date() });
